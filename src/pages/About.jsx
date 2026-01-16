@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { RocketIcon, TargetIcon, BuildingIcon, LockIcon } from '../components/icons/IconComponents'
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -63,10 +64,10 @@ const About = () => {
                         className="grid grid-cols-1 md:grid-cols-2 gap-8"
                     >
                         {[
-                            { t: 'Be Early', d: 'Earn trust long before official automation is mandated.', i: '🌅' },
-                            { t: 'Be Precise', d: 'Standardize filing history and compliance timelines.', i: '🎯' },
-                            { t: 'Be Resilient', d: 'Private infrastructure today, government partner tomorrow.', i: '🏗️' },
-                            { t: 'Be Trusted', d: 'Secure, NDPR-compliant data handling at every layer.', i: '🔐' }
+                            { t: 'Be Early', d: 'Earn trust long before official automation is mandated.', Icon: RocketIcon },
+                            { t: 'Be Precise', d: 'Standardize filing history and compliance timelines.', Icon: TargetIcon },
+                            { t: 'Be Resilient', d: 'Private infrastructure today, government partner tomorrow.', Icon: BuildingIcon },
+                            { t: 'Be Trusted', d: 'Secure, NDPR-compliant data handling at every layer.', Icon: LockIcon }
                         ].map((item, i) => (
                             <motion.div
                                 key={i}
@@ -74,7 +75,9 @@ const About = () => {
                                 whileHover={{ scale: 1.05, y: -5 }}
                                 className="bg-gray-50 p-8 rounded-[2rem] border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-shadow"
                             >
-                                <div className="text-3xl mb-4">{item.i}</div>
+                                <div className="text-ree-green mb-4">
+                                    <item.Icon className="w-12 h-12" />
+                                </div>
                                 <h4 className="text-xl font-black text-ree-green mb-4">{item.t}</h4>
                                 <p className="text-sm font-bold text-gray-500 leading-relaxed">{item.d}</p>
                             </motion.div>

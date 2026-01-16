@@ -1,14 +1,17 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FolderIcon, RefreshIcon, BadgeIcon, ShieldIcon } from '../components/icons/IconComponents'
 import { useRef } from 'react'
+import BackgroundDecorations from "../components/BackgroundDecorations"
 import silosImg from '../assets/silos.png'
 import manualImg from '../assets/manual.png'
 import leakageImg from '../assets/leakage.png'
 
 const fadeInUp = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
     visible: {
         opacity: 1,
         y: 0,
+        scale: 1,
         transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
     }
 }
@@ -18,76 +21,78 @@ const staggerContainer = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.1,
-            delayChildren: 0.2
+            staggerChildren: 0.15,
+            delayChildren: 0.1
         }
     }
 }
 
 const Problems = () => {
     const containerRef = useRef(null)
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end end"]
-    })
 
     return (
-        <div className="bg-white overflow-hidden" ref={containerRef}>
+        <div className="min-h-screen bg-[#f8fafc] selection:bg-red-500/20 selection:text-red-900" ref={containerRef}>
+            <BackgroundDecorations />
+
             {/* Problem Hero */}
-            <section className="relative min-h-[90vh] flex items-center pt-20 pb-20 md:pt-24 md:pb-32">
+            <section className="relative min-h-[85vh] flex items-center pt-32 pb-24 overflow-hidden bg-slate-950">
+                {/* Background Image with Overlay */}
                 <div className="absolute inset-0 z-0">
-                    <motion.div
-                        initial={{ scale: 1.1, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 0.05 }}
-                        transition={{ duration: 2 }}
-                        className="w-full h-full"
-                    >
-                        <img src={silosImg} alt="" className="w-full h-full object-cover grayscale" />
-                    </motion.div>
-                    <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
+                    <img
+                        src="/home/codenamemomi/.gemini/antigravity/brain/9c304481-194a-4b95-b414-3abb02b58d6f/problems_header_bg_1768532963715.png"
+                        alt="Background"
+                        className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-110 blur-[2px]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/80 to-[#f8fafc]" />
                 </div>
 
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 w-full">
                     <motion.div
                         initial="hidden"
                         animate="visible"
-                        variants={fadeInUp}
+                        variants={staggerContainer}
                         className="max-w-4xl"
                     >
-                        <span className="inline-block px-4 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-black uppercase tracking-widest mb-8 border border-red-100">
-                            The Critical Gap
-                        </span>
-                        <h1 className="text-4xl md:text-8xl font-black text-gray-900 tracking-tighter mb-10 leading-[0.9] md:leading-[0.85]">
-                            Nigeria's Tax Reality is <br />
-                            <span className="text-red-500 italic">Broken By Design.</span>
-                        </h1>
-                        <p className="text-lg md:text-3xl text-gray-500 font-medium leading-relaxed md:leading-tight max-w-3xl">
+                        <motion.div
+                            variants={fadeInUp}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 backdrop-blur-md mb-8"
+                        >
+                            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                            <span className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em]">The Critical Gap</span>
+                        </motion.div>
+
+                        <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl lg:text-[7.5rem] font-black text-white tracking-tighter mb-10 leading-[0.85] md:leading-[0.8]">
+                            Tax Reality is <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-500 italic">Broken By Design.</span>
+                        </motion.h1>
+
+                        <motion.p variants={fadeInUp} className="text-xl md:text-3xl text-slate-300 font-medium leading-relaxed max-w-3xl">
                             From siloed state systems to manual refund claims, the cost of compliance is an invisible tax on every business in Nigeria.
-                        </p>
+                        </motion.p>
                     </motion.div>
                 </div>
             </section>
 
             {/* Deep Dive Section 1: Fragmentation */}
-            <section className="py-16 md:py-32 bg-slate-50 relative">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-24 items-center">
+            <section className="relative py-32 md:py-48 overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 grid lg:grid-cols-2 gap-32 items-center">
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         className="relative"
                     >
-                        <div className="absolute -inset-4 bg-red-500/10 blur-3xl rounded-full" />
-                        <img src={silosImg} alt="Fragmented Silos" className="relative rounded-[40px] shadow-2xl border border-white" />
-                        <div className="absolute -bottom-10 -right-10 bg-white p-8 rounded-3xl shadow-xl border border-gray-100 max-w-xs hidden md:block">
-                            <div className="text-4xl font-black text-red-500 mb-2">37+</div>
-                            <div className="text-xs font-bold uppercase tracking-widest text-gray-400">Independent Revenue Authorities working in silos.</div>
+                        <div className="absolute -inset-10 bg-red-500/10 blur-[100px] rounded-full animate-pulse" />
+                        <img src={silosImg} alt="Fragmented Silos" className="relative rounded-[3rem] shadow-2xl border border-white/40 backdrop-blur-3xl" />
+                        <div className="absolute -bottom-12 -right-12 bg-white/60 backdrop-blur-2xl p-10 rounded-3xl shadow-2xl border border-white/20 max-w-sm hidden md:block">
+                            <div className="text-5xl font-black text-red-500 mb-3 tracking-tighter">37+</div>
+                            <div className="text-sm font-black uppercase tracking-widest text-slate-500 leading-tight">Independent Revenue Authorities working in total data isolation.</div>
                         </div>
                     </motion.div>
 
                     <div>
-                        <h2 className="text-4xl font-black text-gray-900 mb-8 tracking-tight">Federated <br />Fragmentation</h2>
-                        <p className="text-lg text-gray-500 font-medium leading-relaxed mb-8">
+                        <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-10 tracking-tighter leading-[0.85]">Federated <br />Fragmentation.</h2>
+                        <p className="text-lg text-slate-500 font-medium leading-relaxed mb-10">
                             Nigeria’s tax system is split across the FIRS, 36 States, and the FCT. Each acts as a sovereign data island with zero interoperability.
                         </p>
                         <ul className="space-y-6">
@@ -96,11 +101,11 @@ const Problems = () => {
                                 'Duplicate filings required for multi-state operations.',
                                 'Manual reconciliation of PAYE vs State IRS records.'
                             ].map((item, i) => (
-                                <li key={i} className="flex items-start gap-4">
-                                    <span className="w-6 h-6 rounded-full bg-red-100 text-red-500 flex items-center justify-center shrink-0 mt-1">
-                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
+                                <li key={i} className="flex items-center gap-6 group">
+                                    <span className="w-10 h-10 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner border border-red-500/20">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
                                     </span>
-                                    <span className="text-gray-700 font-bold">{item}</span>
+                                    <span className="text-slate-800 font-black text-lg tracking-tight">{item}</span>
                                 </li>
                             ))}
                         </ul>
@@ -109,32 +114,33 @@ const Problems = () => {
             </section>
 
             {/* Deep Dive Section 2: Manual Bottlenecks */}
-            <section className="py-32 bg-white relative">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-24 items-center">
+            <section className="relative py-32 md:py-48 overflow-hidden bg-white/20 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 grid lg:grid-cols-2 gap-32 items-center">
                     <div className="order-2 lg:order-1">
-                        <h2 className="text-4xl font-black text-gray-900 mb-8 tracking-tight">The Manual <br />Stranglehold</h2>
-                        <p className="text-lg text-gray-500 font-medium leading-relaxed mb-8">
+                        <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-10 tracking-tighter leading-[0.85]">The Manual <br />Stranglehold.</h2>
+                        <p className="text-lg text-slate-500 font-medium leading-relaxed mb-12">
                             When a refund is due or an adjustment is needed, the digital journey ends. Processes that should take seconds take months of offline correspondence.
                         </p>
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="bg-red-50 p-6 rounded-2xl border border-red-100">
-                                <div className="text-3xl font-black text-red-600 mb-1">90%</div>
-                                <div className="text-[10px] font-black uppercase tracking-widest text-red-400">Manual Claims</div>
+                        <div className="grid grid-cols-2 gap-8">
+                            <div className="bg-red-500/5 backdrop-blur-xl p-8 rounded-[2rem] border border-red-500/10 group hover:bg-red-500/10 transition-all">
+                                <div className="text-4xl font-black text-red-600 mb-2 tracking-tighter group-hover:scale-110 transition-transform">90%</div>
+                                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-400">Manual Claims</div>
                             </div>
-                            <div className="bg-red-50 p-6 rounded-2xl border border-red-100">
-                                <div className="text-3xl font-black text-red-600 mb-1">0%</div>
-                                <div className="text-[10px] font-black uppercase tracking-widest text-red-400">Status Visibility</div>
+                            <div className="bg-red-500/5 backdrop-blur-xl p-8 rounded-[2rem] border border-red-500/10 group hover:bg-red-500/10 transition-all">
+                                <div className="text-4xl font-black text-red-600 mb-2 tracking-tighter group-hover:scale-110 transition-transform">0%</div>
+                                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-400">Status Visibility</div>
                             </div>
                         </div>
                     </div>
 
                     <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        className="order-1 lg:order-2"
+                        className="order-1 lg:order-2 relative"
                     >
-                        <img src={manualImg} alt="Manual Bottleneck" className="rounded-[40px] shadow-2xl border border-gray-100" />
+                        <div className="absolute inset-0 bg-red-500/5 blur-[80px] rounded-full scale-110" />
+                        <img src={manualImg} alt="Manual Bottleneck" className="relative rounded-[3rem] shadow-2xl border border-white/40" />
                     </motion.div>
                 </div>
             </section>
@@ -164,11 +170,11 @@ const Problems = () => {
             </section>
 
             {/* Comparison Grid (The Ree-fond Delta) */}
-            <section className="py-32 bg-white">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <section className="relative py-24 md:py-32 overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
                     <div className="text-center mb-24">
-                        <h2 className="text-5xl font-black text-gray-900 mb-6 tracking-tighter">The Ree-fond Delta</h2>
-                        <p className="text-xl text-gray-500 font-medium">How our infrastructure layer bridges the gap.</p>
+                        <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-5xl md:text-7xl font-black text-slate-900 mb-10 tracking-tighter leading-none">The <span className="text-ree-green">Delta.</span></motion.h2>
+                        <p className="text-xl text-slate-500 font-medium">How our infrastructure layer bridges the visibility gap.</p>
                     </div>
 
                     <motion.div
@@ -176,49 +182,46 @@ const Problems = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
-                        className="grid md:grid-cols-2 gap-8"
+                        className="grid md:grid-cols-2 gap-10"
                     >
                         {[
                             {
                                 p: 'Offline Filing History',
                                 s: 'Standardized Digital System of Record',
-                                icon: '📁'
+                                Icon: FolderIcon
                             },
                             {
                                 p: 'Opaque Refund Status',
                                 s: 'Real-time Refund Tracking API',
-                                icon: '🔄'
+                                Icon: RefreshIcon
                             },
                             {
                                 p: 'Fragmented Identities',
                                 s: 'Unified Taxpayer Identity (TIN) Layer',
-                                icon: '🆔'
+                                Icon: BadgeIcon
                             },
                             {
                                 p: 'High Audit Difficulty',
                                 s: 'Automated Audit Trails & Profiles',
-                                icon: '🛡️'
+                                Icon: ShieldIcon
                             }
                         ].map((row, i) => (
                             <motion.div
                                 key={i}
                                 variants={fadeInUp}
-                                whileHover={{ y: -10, transition: { type: "spring", stiffness: 300 } }}
-                                className="group p-1 bg-gray-50 rounded-[32px] hover:bg-ree-green/5 transition-colors cursor-default"
+                                className="group bg-white/60 backdrop-blur-xl p-8 md:p-12 rounded-[3rem] border border-white/40 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2 cursor-default"
                             >
-                                <div className="bg-white p-10 rounded-[31px] border border-gray-100 shadow-sm flex flex-col h-full group-hover:shadow-xl transition-shadow">
-                                    <div className="text-4xl mb-6 group-hover:scale-110 transition-transform origin-left">{row.icon}</div>
-                                    <div className="space-y-6 flex-grow">
-                                        <div className="relative pl-6 border-l-2 border-red-500/20">
-                                            <span className="absolute left-0 top-0 text-[10px] font-black text-red-500/40 uppercase -translate-x-full -rotate-90 origin-top-right mt-2 mr-2">Status Quo</span>
-                                            <div className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Problem</div>
-                                            <div className="text-gray-900 font-black text-lg leading-tight">{row.p}</div>
-                                        </div>
-                                        <div className="relative pl-6 border-l-2 border-ree-green">
-                                            <span className="absolute left-0 top-0 text-[10px] font-black text-ree-green uppercase -translate-x-full -rotate-90 origin-top-right mt-2 mr-2">The Future</span>
-                                            <div className="text-sm font-bold text-ree-green uppercase tracking-widest mb-1">Infrastructure Solution</div>
-                                            <div className="text-gray-1000 font-black text-lg leading-tight">{row.s}</div>
-                                        </div>
+                                <div className="text-ree-green mb-8 group-hover:scale-110 transition-transform origin-left">
+                                    <row.Icon className="w-10 h-10" />
+                                </div>
+                                <div className="space-y-6">
+                                    <div className="relative pl-6 border-l-4 border-red-500/20">
+                                        <div className="text-[10px] font-black text-red-500/40 uppercase tracking-[0.3em] mb-4">The Status Quo</div>
+                                        <div className="text-slate-900 font-black text-lg tracking-tight leading-tight">{row.p}</div>
+                                    </div>
+                                    <div className="relative pl-6 border-l-4 border-ree-green">
+                                        <div className="text-[10px] font-black text-ree-green uppercase tracking-[0.3em] mb-4">Infrastructure Solution</div>
+                                        <div className="text-slate-900 font-black text-lg tracking-tight leading-tight">{row.s}</div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -228,63 +231,65 @@ const Problems = () => {
             </section>
 
             {/* 2026 Risk Section */}
-            <section className="py-32 bg-red-950 text-white overflow-hidden relative">
-                <div className="absolute inset-0 opacity-10 pointer-events-none">
-                    <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#ef4444_0%,transparent_50%)]" />
-                </div>
+            <section className="relative py-24 md:py-32 overflow-hidden bg-slate-900">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent opacity-50 pointer-events-none" />
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-20 items-center">
-                        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                            <h2 className="text-4xl md:text-6xl font-black mb-10 tracking-tighter leading-none">
+                    <div className="grid lg:grid-cols-2 gap-24 items-center">
+                        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}>
+                            <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-10 tracking-tighter leading-[0.85]">
                                 The 2026 <br />
                                 <span className="text-red-500">Complexity Multiplier.</span>
-                            </h2>
-                            <p className="text-xl text-gray-400 font-medium mb-12 leading-relaxed">
-                                The status quo is already failing. The 2026 regime introduction will push manual tax operations over the edge with more disputes, stricter penalties, and mandatory worldwide income disclosures.
-                            </p>
+                            </motion.h2>
+                            <motion.p variants={fadeInUp} className="text-lg md:text-xl text-slate-400 font-medium mb-12 leading-relaxed">
+                                The status quo is already failing. The 2026 regime introduction will push manual tax operations over the edge with complex disclosures and mandatory enforcement.
+                            </motion.p>
                             <div className="space-y-6">
                                 {[
                                     { t: 'Multi-State Development Levies', d: 'New filing types that will break manual spreadsheets.' },
                                     { t: 'TIN-BVN-NIN Convergence', d: 'Nowhere to hide for non-compliant entities.' },
                                     { t: 'Automated Penalty Triggers', d: 'Stricter enforcement means zero margin for error.' }
                                 ].map((risk, i) => (
-                                    <div key={i} className="flex gap-4 p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
-                                        <div className="w-1.5 h-full bg-red-500 rounded-full" />
+                                    <motion.div key={i} variants={fadeInUp} className="flex gap-6 p-6 md:p-8 bg-white/5 rounded-[2rem] border border-white/10 backdrop-blur-md group hover:bg-white/10 transition-all">
+                                        <div className="w-1.5 h-auto bg-gradient-to-b from-red-500 to-transparent rounded-full group-hover:scale-y-110 transition-transform" />
                                         <div>
-                                            <div className="font-black text-lg mb-1">{risk.t}</div>
-                                            <div className="text-sm font-medium text-gray-400">{risk.d}</div>
+                                            <div className="font-black text-lg text-white mb-2 tracking-tight">{risk.t}</div>
+                                            <div className="text-sm font-medium text-slate-400">{risk.d}</div>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
                         </motion.div>
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="bg-white/5 p-12 rounded-[3.5rem] border border-white/10 text-center"
+                            className="bg-white/5 p-12 md:p-20 rounded-[3rem] border border-white/10 text-center backdrop-blur-xl relative group overflow-hidden"
                         >
-                            <div className="text-8xl mb-8">⚠️</div>
-                            <h3 className="text-3xl font-black mb-6 italic">"Compliance scoring becomes enforcement readiness scoring."</h3>
-                            <p className="text-lg text-gray-400 font-medium mb-10">
+                            <div className="absolute inset-0 bg-gradient-to-t from-red-500/10 to-transparent opacity-50 pointer-events-none" />
+                            <div className="text-7xl md:text-9xl mb-12 group-hover:scale-110 transition-transform duration-500">⚠️</div>
+                            <h3 className="text-3xl md:text-4xl font-black text-white mb-8 italic tracking-tight leading-tight">"Compliance scoring becomes enforcement readiness scoring."</h3>
+                            <p className="text-lg text-slate-300 font-medium mb-12 leading-relaxed">
                                 In 2026, compliance isn't just about filing—it's about surviving an audit-centric fiscal regime.
                             </p>
-                            <button className="bg-red-600 text-white px-10 py-4 rounded-xl font-black hover:bg-red-500 transition-all">Audit My Stack</button>
+                            <button className="bg-red-600 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-red-50 transition-all shadow-2xl shadow-red-600/20 uppercase tracking-widest hover:text-red-600">Audit My Stack</button>
                         </motion.div>
                     </div>
                 </div>
             </section>
 
             {/* CTA Section */}
-            <section className="py-32 bg-gray-50">
-                <div className="max-w-4xl mx-auto px-6 text-center">
-                    <h2 className="text-4xl font-black mb-8">Infrastructure is Inevitable.</h2>
-                    <p className="text-xl text-gray-500 font-medium mb-12">
-                        The transition from manual chaos to API-first tax management is already happening. Don't build on top of fragmented silos.
-                    </p>
-                    <button className="bg-ree-green text-white px-12 py-5 rounded-full font-black text-lg hover:bg-ree-light transition-all shadow-2xl hover:shadow-ree-green/40 hover:-translate-y-1">
-                        Build With Ree-fond
-                    </button>
+            <section className="relative py-24 md:py-32 overflow-hidden bg-white/20 backdrop-blur-sm">
+                <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
+                    <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 mb-8 tracking-tighter leading-none">Infrastructure <br />is Inevitable.</h2>
+                        <p className="text-lg md:text-xl text-slate-500 font-medium mb-12 max-w-3xl mx-auto leading-relaxed">
+                            The transition from manual chaos to API-first tax management is already happening. Don't build on top of fragmented silos.
+                        </p>
+                        <button className="group relative overflow-hidden bg-ree-green text-ree-gray px-12 py-5 rounded-[2rem] font-black text-lg shadow-2xl hover:scale-105 transition-all">
+                            <span className="relative z-10 uppercase tracking-[0.2em]">Build With Ree-fond</span>
+                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        </button>
+                    </motion.div>
                 </div>
             </section>
         </div>

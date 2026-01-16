@@ -567,39 +567,48 @@ export const apiData = [
 ];
 
 export const guides = {
+    overview: {
+        title: "API Overview",
+        description: "The REE-FOND API provides access to tax refund and compliance services. The API follows RESTful conventions and uses standard HTTP methods and status codes.",
+        sections: [
+            {
+                heading: "Base Configuration",
+                content: "All API requests should be made to the base URL below with the appropriate headers.",
+                list: [
+                    "Base URL: /api/v1",
+                    "Content-Type: application/json",
+                    "Encoding: UTF-8"
+                ]
+            },
+            {
+                heading: "RESTful Conventions",
+                content: "We use standard HTTP verbs for CRUD operations:",
+                list: [
+                    "GET: Retrieve resources",
+                    "POST: Create new resources",
+                    "PUT/PATCH: Update existing resources",
+                    "DELETE: Remove resources"
+                ]
+            }
+        ]
+    },
     authentication: {
         title: "Authentication Architecture",
-        description: "Ree-fond uses a robust JWT-based Stateless Authentication system with Role-Based Access Control (RBAC).",
+        description: "Ree-fond uses a robust JWT-based Stateless Authentication system. All private endpoints require a Bearer Token in the Authorization header.",
         sections: [
+            {
+                heading: "Authorization Header",
+                content: "Include your access token in the header of every private request:",
+                code: {
+                    lang: "bash",
+                    label: "Example Header",
+                    snippet: "Authorization: Bearer <your_access_token>"
+                }
+            },
             {
                 heading: "Security Core",
                 content: "Our security layer is built on FastAPI and SQLAlchemy, utilizing OAuth2 with Bearer tokens. All passwords are hashed using bcrypt before storage.",
                 badges: ["JWT", "Bcrypt", "RBAC", "Stateless"]
-            },
-            {
-                heading: "Authentication Flow",
-                content: "The login process authenticates credentials against the database and issues a signed JWT access token containing the user's identity and role.",
-                code: {
-                    lang: "python",
-                    label: "Auth Service Logic",
-                    snippet: `@staticmethod
-async def login(db: AsyncSession, login_data: LoginRequest):
-    user = await AuthService.authenticate_user(db, login_data)
-    
-    if not user:
-        raise UnauthorizedException("Incorrect email or password")
-    
-    # Create access token with strictly typed payload
-    access_token = create_access_token(
-        data={"sub": str(user.id), "email": user.email, "role": user.role.value}
-    )
-    
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user": user
-    }`
-                }
             },
             {
                 heading: "Role-Based Access Control (RBAC)",
@@ -610,53 +619,82 @@ async def login(db: AsyncSession, login_data: LoginRequest):
                     { name: "ACCOUNTANT", desc: "Standard user for managing client filings and tax profiles." },
                     { name: "EMPLOYER", desc: "Restricted access to specific employee payroll data." }
                 ]
-            },
-            {
-                heading: "Protected Route Dependencies",
-                content: "Routes are protected using composable dependencies that verify the token and check for required roles.",
-                code: {
-                    lang: "python",
-                    label: "Dependency Injection",
-                    snippet: `# Role-specific dependencies
-async def require_admin(current_user: User = Depends(get_current_user)):
-    AuthService.require_role(current_user, [UserRole.ADMIN.value])
-    return current_user
-
-async def require_accountant(current_user: User = Depends(get_current_user)):
-    AuthService.require_role(current_user, [UserRole.ACCOUNTANT.value, UserRole.ADMIN.value])
-    return current_user`
-                }
-            },
-            {
-                heading: "Standardized Exceptions",
-                content: "The API uses a unified exception handling strategy to ensure consistent error responses across the platform.",
-                list: [
-                    "401 Unauthorized: Invalid credentials or expired token.",
-                    "403 Forbidden: Insufficient permissions for the requested resource.",
-                    "404 Not Found: Resource does not exist.",
-                    "409 Conflict: Data integrity violation (e.g., duplicate email)."
-                ]
             }
         ]
     },
-    taxpayerManagement: {
-        title: "Taxpayer Management - 2026 Ready",
-        description: "Advanced taxpayer identity and compliance management with support for BVN, NIN, residency tracking, and worldwide income flags.",
+    schematics: {
+        title: "Core Resource Schematics",
+        description: "Detailed structure of the core resources as defined in our domain models. All entities typically inherit the base fields (id, created_at, updated_at).",
         sections: [
             {
-                heading: "Identity Verification Layer",
-                content: "Taxpayers are uniquely identified using TIN (Tax Identification Number), BVN (Bank Verification Number), and NIN (National Identification Number) to meet 2026 FIRS requirements.",
-                badges: ["TIN", "BVN", "NIN", "2026-Ready"]
+                heading: "1. User Entity",
+                content: "Represents a physical user or system account.",
+                table: [
+                    { field: "name", type: "String", desc: "Full name." },
+                    { field: "email", type: "String", desc: "Unique email address (login credential)." },
+                    { field: "role", type: "Enum", desc: "ADMIN, ACCOUNTANT, EMPLOYER, ORGANIZATION." },
+                    { field: "organization_id", type: "UUID", desc: "Nullable. The organization this user belongs to." },
+                    { field: "is_active", type: "Boolean", desc: "Defaults to True." }
+                ]
             },
             {
-                heading: "Residency & Worldwide Income",
-                content: "Track taxpayer residency status (resident/non-resident) and worldwide income flags to properly handle cross-border tax obligations and treaty benefits.",
-                list: [
-                    "residency_status: Determines tax obligations and rates",
-                    "worldwide_income_flag: Tracks global income reporting requirements",
-                    "Automatic compliance scoring adjustments based on residency"
+                heading: "2. Organization Entity",
+                content: "The primary tenant entity representing accounting firms or employers.",
+                table: [
+                    { field: "name", type: "String", desc: "Legal name of the entity." },
+                    { field: "type", type: "Enum", desc: "employer, accounting_firm, fintech, government." },
+                    { field: "registration_number", type: "String", desc: "RC Number or equivalent." },
+                    { field: "status", type: "Enum", desc: "pending, active, suspended, verified." },
+                    { field: "subscription_plan", type: "Enum", desc: "free, basic, premium, enterprise." },
+                    { field: "is_verified", type: "Boolean", desc: "KYC status." }
+                ]
+            },
+            {
+                heading: "3. Taxpayer Entity",
+                content: "The subject of tax filings and refund claims with 2026-ready attributes.",
+                table: [
+                    { field: "full_name", type: "String", desc: "Legal name of the individual or corporation." },
+                    { field: "tin", type: "String", desc: "Tax Identification Number." },
+                    { field: "tax_type", type: "Enum", desc: "PAYE, VAT, CIT, WHT, PIT." },
+                    { field: "state", type: "Enum", desc: "Primary state of tax jurisdiction (e.g., Lagos)." },
+                    { field: "employer_id", type: "UUID", desc: "The organization that 'owns' or manages this record." },
+                    { field: "status", type: "Enum", desc: "active, inactive, pending." }
+                ]
+            },
+            {
+                heading: "4. Filing Entity",
+                content: "A record of a tax submission for a specific period.",
+                table: [
+                    { field: "taxpayer_id", type: "UUID", desc: "Foreign key to Taxpayer." },
+                    { field: "period", type: "String", desc: "Format: YYYY-MM or YYYY-QX." },
+                    { field: "due_date", type: "Date", desc: "Statutory deadline." },
+                    { field: "amount_payable", type: "Decimal", desc: "Calculated liability." },
+                    { field: "status", type: "Enum", desc: "draft, submitted, acknowledged, rejected, overdue." },
+                    { field: "is_late", type: "Boolean", desc: "Computed if submission_date > due_date." }
+                ]
+            },
+            {
+                heading: "5. Refund Case Entity",
+                content: "A claim initiated by a taxpayer/organization for overpayment or incentives.",
+                table: [
+                    { field: "case_number", type: "String", desc: "Unique reference (e.g., REF-1697284400)." },
+                    { field: "tax_year", type: "String", desc: "The assessment year." },
+                    { field: "amount_claimed", type: "Decimal", desc: "Requested refund amount." },
+                    { field: "status", type: "Enum", desc: "initiated, under_review, approved, disbursed, rejected." },
+                    { field: "priority", type: "Enum", desc: "low, medium, high, urgent." }
+                ]
+            },
+            {
+                heading: "6. Compliance Score Entity",
+                content: "Result of the compliance engine evaluation.",
+                table: [
+                    { field: "score", type: "Integer", desc: "0 to 100." },
+                    { field: "risk_level", type: "Enum", desc: "low, medium, high, critical." },
+                    { field: "summary", type: "String", desc: "Brief explanation of the score logic." },
+                    { field: "triggered_rules", type: "List[JSON]", desc: "List of rule codes and their impact." }
                 ]
             }
         ]
     }
 };
+

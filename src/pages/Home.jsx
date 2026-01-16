@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
+import { UserIcon, DocumentIcon, CurrencyIcon, ClockIcon, ShieldIcon, FolderIcon, RefreshIcon, BadgeIcon, ChartIcon, LightningIcon, OfficeIcon, ClipboardIcon, LockIcon, RocketIcon } from '../components/icons/IconComponents'
+import BackgroundDecorations from "../components/BackgroundDecorations"
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -96,63 +98,87 @@ const ThreeDCard = () => {
 }
 
 const Home = () => {
-    const [regime, setRegime] = useState('2026') // Default to 2026 to show readiness
+    const [regime, setRegime] = useState('2026')
     return (
-        <div className="overflow-x-hidden">
+        <div className="min-h-screen bg-[#f8fafc] selection:bg-ree-green/20 selection:text-ree-gray">
+            <BackgroundDecorations />
+
             {/* Hero Section */}
-            <section className="relative h-[90vh] flex items-center justify-center bg-white overflow-hidden perspective-1000">
-                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
+            <section className="relative h-[95vh] flex items-center justify-center overflow-hidden bg-slate-950">
+                {/* Background Image with Overlay */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="/home/codenamemomi/.gemini/antigravity/brain/9c304481-194a-4b95-b414-3abb02b58d6f/home_header_bg_1768532948855.png"
+                        alt="Background"
+                        className="w-full h-full object-cover opacity-50 mix-blend-luminosity scale-110 blur-[1px]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/80 to-[#f8fafc]" />
+                </div>
+
+                <div className="absolute inset-0 z-0 opacity-20 pointer-events-none flex items-center justify-center">
                     <ThreeDCard />
                 </div>
 
-                <div className="max-w-7xl mx-auto px-6 relative z-10 text-center pointer-events-none">
-                    {/* Content wrapper to ensure text is above 3D element but allows click-through to it if needed (though it's background) 
-                        Actually, ThreeDCard is background, text is foreground. Pointer events on text container should be auto for buttons.
-                     */}
-                    <div className="pointer-events-auto">
+                <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={staggerContainer}
+                    >
                         <motion.div
-                            initial="hidden"
-                            animate="visible"
-                            variants={staggerContainer}
+                            variants={fadeInUp}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ree-green/10 border border-ree-green/20 backdrop-blur-md mb-8"
                         >
-                            <motion.h1 variants={fadeInUp} className="text-5xl md:text-9xl font-black text-gray-900 tracking-tighter mb-8 leading-[0.9] md:leading-[0.85]">
-                                Shadow Tax <br />
-                                <span className="text-ree-green">Infrastructure</span>
-                            </motion.h1>
-                            <motion.p variants={fadeInUp} className="text-xl md:text-2xl text-gray-500 max-w-3xl mx-auto mb-12 font-medium">
-                                Standardizing Nigeria's tax record-keeping through a resilient system of record.
-                            </motion.p>
-                            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-                                <button className="bg-ree-green text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-ree-green/20 hover:scale-105 transition-transform w-full sm:w-auto">Get Started</button>
-                                <button className="bg-white text-ree-gray border border-gray-200 px-8 py-4 rounded-xl font-bold hover:bg-gray-50 transition-colors w-full sm:w-auto">Documentation</button>
-                            </motion.div>
+                            <span className="w-2 h-2 rounded-full bg-ree-green animate-pulse" />
+                            <span className="text-[10px] font-black text-ree-green uppercase tracking-[0.2em]">The Tax Infrastructure Engine</span>
                         </motion.div>
-                    </div>
+
+                        <motion.h1 variants={fadeInUp} className="text-5xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter mb-8 leading-[0.85] md:leading-[0.8]">
+                            Shadow Tax <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-ree-green via-ree-light to-emerald-400">Infrastructure.</span>
+                        </motion.h1>
+
+                        <motion.p variants={fadeInUp} className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto mb-16 font-medium leading-relaxed">
+                            Standardizing Nigeria's tax record-keeping through <br className="hidden md:block" /> a resilient, API-first system of record.
+                        </motion.p>
+
+                        <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row justify-center gap-6">
+                            <button className="group relative overflow-hidden bg-ree-green text-ree-gray px-12 py-5 rounded-2xl font-black shadow-2xl hover:bg-ree-light transition-all">
+                                <span className="relative z-10">Get API Access</span>
+                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                            </button>
+                            <button onClick={() => window.location.href = '/docs'} className="bg-white/5 text-white border border-white/10 px-12 py-5 rounded-2xl font-black backdrop-blur-xl hover:bg-white/10 transition-all">
+                                Documentation
+                            </button>
+                        </motion.div>
+                    </motion.div>
                 </div>
             </section>
 
             {/* Shadow Tax API (Infrastructure MVP) */}
-            <section className="py-16 md:py-32 bg-slate-50 border-y border-gray-100">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12">
-                    <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <section className="relative py-32 md:py-48 overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-24 items-center">
                         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                            <h2 className="text-4xl md:text-6xl font-black text-ree-gray tracking-tighter mb-10 leading-[0.9]">
+                            <h2 className="text-4xl md:text-6xl font-black text-ree-gray tracking-tighter mb-10 leading-[0.85]">
                                 The API for <br />
-                                <span className="text-ree-green italic underline decoration-ree-light">Unstructured Reality</span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-ree-green to-emerald-600 italic underline decoration-ree-light">Unstructured Reality.</span>
                             </h2>
-                            <p className="text-xl text-gray-500 font-medium mb-12 leading-relaxed">
-                                Ree-fond does not wait for government APIs. It becomes the <strong>structured system of record</strong> that removes chaos from tax operations before the first filing reaches the tax office.
+                            <p className="text-xl text-slate-500 font-medium mb-12 leading-relaxed">
+                                Ree-fond doesn't just wait for government APIs. It becomes the <strong>structured system of record</strong> that removes chaos from tax operations before the first filing reaches the tax office.
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 {[
-                                    { title: 'Taxpayer Profiles', icon: '👤' },
-                                    { title: 'Filing History', icon: '📄' },
-                                    { title: 'Refund Records', icon: '💰' },
-                                    { title: 'Compliance Timelines', icon: '⏳' }
+                                    { title: 'Taxpayer Profiles', Icon: UserIcon },
+                                    { title: 'Filing History', Icon: DocumentIcon },
+                                    { title: 'Refund Records', Icon: CurrencyIcon },
+                                    { title: 'Compliance Timelines', Icon: ClockIcon }
                                 ].map((item, i) => (
-                                    <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                                        <div className="text-2xl mb-3">{item.icon}</div>
-                                        <div className="font-black text-ree-gray tracking-tight">{item.title}</div>
+                                    <div key={i} className="group bg-white/60 backdrop-blur-xl p-6 rounded-[2rem] shadow-xl border border-white/20 hover:bg-white/80 transition-all hover:-translate-y-2">
+                                        <div className="text-ree-green mb-4 group-hover:scale-110 transition-transform">
+                                            <item.Icon className="w-8 h-8" />
+                                        </div>
+                                        <div className="font-black text-lg text-ree-gray tracking-tight">{item.title}</div>
                                     </div>
                                 ))}
                             </div>
@@ -161,18 +187,23 @@ const Home = () => {
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="bg-ree-gray rounded-[3rem] p-12 text-white relative flex flex-col justify-center min-h-[500px]"
+                            className="bg-slate-900 rounded-[3.5rem] p-16 text-white relative flex flex-col justify-center min-h-[600px] shadow-2xl overflow-hidden group"
                         >
-                            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-64 h-64 bg-ree-green/20 blur-[100px] rounded-full" />
-                            <h3 className="text-3xl font-black mb-8 italic">"Infrastructure wins by being early and trusted."</h3>
-                            <p className="text-lg text-gray-400 font-medium mb-10 italic">
+                            <div className="absolute inset-0 bg-gradient-to-br from-ree-green/20 to-transparent opacity-50 pointer-events-none" />
+                            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-ree-green/20 blur-[120px] rounded-full group-hover:bg-ree-green/30 transition-all" />
+
+                            <h3 className="text-4xl font-black mb-10 italic leading-tight relative z-10">"Infrastructure wins by being early and trusted."</h3>
+                            <p className="text-xl text-slate-400 font-medium mb-12 italic relative z-10">
                                 We've built the data layer that governments and corporations will eventually depend on to verify tax compliance in real-time.
                             </p>
-                            <div className="flex items-center gap-6 mt-auto">
-                                <div className="w-16 h-16 rounded-full bg-ree-green/20 flex items-center justify-center text-3xl">🛡️</div>
+
+                            <div className="flex items-center gap-8 mt-auto relative z-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                <div className="w-20 h-20 rounded-2xl bg-ree-green/20 flex items-center justify-center text-ree-green shadow-inner">
+                                    <ShieldIcon className="w-10 h-10" />
+                                </div>
                                 <div>
-                                    <div className="text-sm font-black uppercase tracking-widest text-ree-light">Audit-Ready</div>
-                                    <div className="text-gray-400 font-medium">Immutable tax event logs</div>
+                                    <div className="text-sm font-black uppercase tracking-[0.3em] text-ree-green mb-1">Audit-Ready</div>
+                                    <div className="text-slate-300 font-medium text-lg italic">Immutable tax event logs.</div>
                                 </div>
                             </div>
                         </motion.div>
@@ -181,14 +212,14 @@ const Home = () => {
             </section>
 
             {/* Core MVP API Modules */}
-            <section className="py-16 md:py-32 bg-white">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <section className="relative py-24 md:py-32 bg-white/30 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
                     <div className="text-center mb-24">
-                        <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="text-4xl md:text-7xl font-black text-ree-gray tracking-tighter mb-8 leading-none">
-                            MVP <span className="text-ree-green">Modules</span>
+                        <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="text-5xl md:text-7xl font-black text-ree-gray tracking-tighter mb-10 leading-none">
+                            MVP <span className="text-ree-green">Modules.</span>
                         </motion.h2>
-                        <p className="text-xl text-gray-500 max-w-3xl mx-auto font-medium">
-                            Core engine blocks designed to handle the complexity of Nigerian tax reality.
+                        <p className="text-2xl text-slate-500 max-w-3xl mx-auto font-medium leading-relaxed">
+                            Core engine blocks designed to absorb the complexity of Nigerian tax reality.
                         </p>
                     </div>
 
@@ -197,7 +228,7 @@ const Home = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}
-                        className="grid md:grid-cols-2 gap-8"
+                        className="grid md:grid-cols-2 gap-10"
                     >
                         <motion.div variants={fadeInUp}>
                             <CodeSnippet
@@ -256,13 +287,7 @@ const Home = () => {
             </section>
 
             {/* 2026 Regime Resilience Section */}
-            <section className="py-16 md:py-32 bg-slate-50 border-y border-gray-100 overflow-hidden relative">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-5 pointer-events-none">
-                    <div className="grid grid-cols-6 h-full border-x border-ree-gray/10">
-                        {[...Array(6)].map((_, i) => <div key={i} className="border-r border-ree-gray/10" />)}
-                    </div>
-                </div>
-
+            <section className="relative py-24 md:py-32 overflow-hidden bg-slate-100/50">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
                     <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-24">
                         <div className="max-w-3xl">
@@ -270,7 +295,7 @@ const Home = () => {
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                className="inline-block px-4 py-1.5 rounded-full bg-ree-green/10 text-ree-green text-xs font-black uppercase tracking-[0.2em] mb-8"
+                                className="inline-block px-4 py-2 rounded-full bg-ree-green/10 text-ree-green text-xs font-black uppercase tracking-[0.3em] mb-10 border border-ree-green/20"
                             >
                                 The 2026 Paradigm Shift
                             </motion.span>
@@ -279,28 +304,28 @@ const Home = () => {
                                 whileInView="visible"
                                 viewport={{ once: true }}
                                 variants={fadeInUp}
-                                className="text-4xl md:text-7xl font-black text-ree-gray tracking-tighter mb-10 leading-[0.9]"
+                                className="text-5xl md:text-7xl font-black text-ree-gray tracking-tighter mb-10 leading-[0.85]"
                             >
                                 {regime === 'current' ? 'Navigating the' : 'Architected for'} <br />
-                                <span className="text-ree-green italic">{regime === 'current' ? 'Status Quo.' : 'The New Regime.'}</span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-ree-green to-emerald-600 italic">{regime === 'current' ? 'Status Quo.' : 'The New Regime.'}</span>
                             </motion.h2>
-                            <p className="text-xl text-gray-500 font-medium leading-relaxed">
+                            <p className="text-xl text-slate-500 font-medium leading-relaxed max-w-2xl">
                                 {regime === 'current'
                                     ? "While others wait for government APIs, Ree-fond's infrastructure already standardizes the manual-heavy reality of today's tax workflows."
                                     : "The 2026 Nigerian tax law introduces stricter enforcement and complex disclosures. Ree-fond is architected to absorb this complexity by design."}
                             </p>
                         </div>
 
-                        <div className="bg-white p-2 rounded-2xl shadow-xl border border-gray-100 flex gap-2 self-start lg:self-auto">
+                        <div className="bg-white/60 backdrop-blur-xl p-2.5 rounded-3xl shadow-2xl border border-white/40 flex gap-2 self-start lg:self-auto">
                             <button
                                 onClick={() => setRegime('current')}
-                                className={`px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${regime === 'current' ? 'bg-ree-gray text-white shadow-lg' : 'text-gray-400 hover:text-ree-gray'}`}
+                                className={`px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all ${regime === 'current' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:text-slate-900'}`}
                             >
                                 Current State
                             </button>
                             <button
                                 onClick={() => setRegime('2026')}
-                                className={`px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${regime === '2026' ? 'bg-ree-green text-white shadow-lg' : 'text-gray-400 hover:text-ree-green'}`}
+                                className={`px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all ${regime === '2026' ? 'bg-ree-green text-ree-gray shadow-xl shadow-ree-green/20' : 'text-slate-400 hover:text-ree-green'}`}
                             >
                                 2026 Regime
                             </button>
@@ -313,13 +338,14 @@ const Home = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
-                        className="grid lg:grid-cols-3 gap-8"
+                        className="grid lg:grid-cols-3 gap-10"
                     >
                         <AnimatePresence mode="wait">
                             {[
                                 {
                                     title: "Tax Refund Management",
-                                    icon: regime === 'current' ? "💰" : "🔄",
+                                    CurrentIcon: CurrencyIcon,
+                                    FutureIcon: RefreshIcon,
                                     status: regime === 'current' ? "Manual Reality" : "Enforcement Ready",
                                     impact: regime === 'current'
                                         ? "Currently manual-heavy and opaque in Nigeria. Ree-fond brings structure to existing filing histories and refund claims."
@@ -328,7 +354,8 @@ const Home = () => {
                                 },
                                 {
                                     title: "Adaptive Filing Management",
-                                    icon: regime === 'current' ? "📂" : "⚡",
+                                    CurrentIcon: FolderIcon,
+                                    FutureIcon: LightningIcon,
                                     status: regime === 'current' ? "Multi-Type Support" : "New Disclosures",
                                     impact: regime === 'current'
                                         ? "Supports Monthly, Quarterly, and Annual PAYE/WHT/VAT filings out of the box with standardized data schemas."
@@ -337,7 +364,8 @@ const Home = () => {
                                 },
                                 {
                                     title: "TIN-Centric Identity",
-                                    icon: regime === 'current' ? "👤" : "🆔",
+                                    CurrentIcon: UserIcon,
+                                    FutureIcon: BadgeIcon,
                                     status: regime === 'current' ? "Unified Profiles" : "Enforced Linkage",
                                     impact: regime === 'current'
                                         ? "Unified taxpayer identity across multiple tax jurisdictions and states before central government synchronization exists."
@@ -346,7 +374,8 @@ const Home = () => {
                                 },
                                 {
                                     title: "Compliance Intelligence",
-                                    icon: regime === 'current' ? "📈" : "🛡️",
+                                    CurrentIcon: ChartIcon,
+                                    FutureIcon: ShieldIcon,
                                     status: regime === 'current' ? "Gap Analysis" : "Audit Readiness",
                                     impact: regime === 'current'
                                         ? "Identifies missing filings and late submissions in current workflows using real-time compliance tracking."
@@ -355,7 +384,8 @@ const Home = () => {
                                 },
                                 {
                                     title: "Digital Audit Trails",
-                                    icon: regime === 'current' ? "📋" : "🔒",
+                                    CurrentIcon: ClipboardIcon,
+                                    FutureIcon: LockIcon,
                                     status: regime === 'current' ? "Record Integrity" : "Trust Multiplier",
                                     impact: regime === 'current'
                                         ? "Every tax event is logged with immutable timestamps, creating a defensible record for current manual audits."
@@ -364,7 +394,8 @@ const Home = () => {
                                 },
                                 {
                                     title: "Scalable Infrastructure",
-                                    icon: regime === 'current' ? "🚀" : "🏢",
+                                    CurrentIcon: RocketIcon,
+                                    FutureIcon: OfficeIcon,
                                     status: regime === 'current' ? "MVP Layer" : "Strategic Bedrock",
                                     impact: regime === 'current'
                                         ? "Built as a modular API infrastructure that handles today's unstructured reality at scale for accounting firms and payroll providers."
@@ -375,24 +406,25 @@ const Home = () => {
                                 <motion.div
                                     key={`${regime}-${item.id}`}
                                     layout
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     transition={{ duration: 0.4, delay: i * 0.05 }}
-                                    whileHover={{ y: -10 }}
-                                    className="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-2xl transition-all group flex flex-col h-full"
+                                    className="group bg-white/60 backdrop-blur-xl p-8 lg:p-12 rounded-[3rem] border border-white/40 shadow-xl hover:shadow-2xl transition-all flex flex-col h-full hover:-translate-y-2"
                                 >
-                                    <div className="text-5xl mb-8 group-hover:scale-110 transition-transform origin-left">{item.icon}</div>
-                                    <div className="mb-6">
-                                        <div className={`text-[10px] font-black uppercase tracking-widest mb-2 ${regime === '2026' ? 'text-ree-green' : 'text-ree-gray opacity-40'}`}>{item.status}</div>
-                                        <h4 className="text-2xl font-black text-ree-gray tracking-tight leading-none">{item.title}</h4>
+                                    <div className="text-ree-green mb-8 group-hover:scale-110 transition-transform origin-left">
+                                        {regime === 'current' ? <item.CurrentIcon className="w-12 h-12" /> : <item.FutureIcon className="w-12 h-12" />}
                                     </div>
-                                    <p className="text-gray-500 font-medium text-sm leading-relaxed mb-8 flex-grow">
+                                    <div className="mb-6">
+                                        <div className={`text-[10px] font-black uppercase tracking-[0.3em] mb-3 ${regime === '2026' ? 'text-ree-green' : 'text-slate-400'}`}>{item.status}</div>
+                                        <h4 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight leading-none">{item.title}</h4>
+                                    </div>
+                                    <p className="text-slate-500 font-medium text-base lg:text-lg leading-relaxed mb-8 flex-grow">
                                         {item.impact}
                                     </p>
-                                    <div className="flex items-center gap-2 pt-6 border-t border-gray-50">
-                                        <div className={`w-2 h-2 rounded-full ${regime === '2026' ? 'bg-ree-green' : 'bg-gray-300'}`} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-ree-gray">
+                                    <div className="flex items-center gap-3 pt-8 border-t border-slate-100">
+                                        <div className={`w-2.5 h-2.5 rounded-full ${regime === '2026' ? 'bg-ree-green animate-pulse' : 'bg-slate-300'}`} />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
                                             {regime === '2026' ? 'Ready for 2026' : 'Active Infrastructure'}
                                         </span>
                                     </div>
@@ -404,17 +436,18 @@ const Home = () => {
             </section>
 
             {/* Who It's For & Why They Pay */}
-            <section className="py-20 md:py-40 bg-ree-gray text-white">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-32">
+            <section className="relative py-24 md:py-32 overflow-hidden bg-slate-950">
+                <div className="absolute inset-0 bg-gradient-to-t from-ree-green/10 to-transparent opacity-30 pointer-events-none" />
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 grid lg:grid-cols-2 gap-24">
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                        <h2 className="text-4xl md:text-6xl font-black mb-12 tracking-tighter leading-none italic">
+                        <h2 className="text-5xl md:text-7xl font-black text-white mb-12 tracking-tighter leading-none italic">
                             Who the MVP <br />
-                            <span className="text-ree-green">Is For</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-ree-green to-emerald-400">Is For.</span>
                         </h2>
-                        <p className="text-xl text-gray-400 font-medium mb-12">
+                        <p className="text-2xl text-slate-400 font-medium mb-16 leading-relaxed">
                             Ree-fond is built for the users who feel the tax pain daily.
                         </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {[
                                 'Accounting & Tax Firms',
                                 'Payroll Providers',
@@ -422,32 +455,32 @@ const Home = () => {
                                 'Fintechs',
                                 'SME Employers'
                             ].map((customer, i) => (
-                                <div key={i} className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center gap-4 group hover:bg-white/10 transition-all">
-                                    <div className="w-8 h-8 rounded-full bg-ree-green flex items-center justify-center text-xs font-black">{i + 1}</div>
-                                    <span className="font-bold text-gray-200">{customer}</span>
+                                <div key={i} className="bg-white/5 border border-white/10 p-8 rounded-[2rem] flex items-center gap-6 group hover:bg-white/10 transition-all backdrop-blur-md">
+                                    <div className="w-12 h-12 rounded-full bg-ree-green/20 text-ree-green flex items-center justify-center text-lg font-black border border-ree-green/40">{i + 1}</div>
+                                    <span className="font-black text-slate-200 text-lg tracking-tight">{customer}</span>
                                 </div>
                             ))}
                         </div>
                     </motion.div>
 
-                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="space-y-12">
+                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="space-y-16">
                         <div>
-                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-ree-light mb-8">Business Value</h3>
-                            <div className="space-y-8">
-                                <div className="relative pl-12">
-                                    <div className="absolute left-0 top-0 text-3xl">🚀</div>
-                                    <h4 className="text-xl font-black mb-2">Faster Tax Operations</h4>
-                                    <p className="text-gray-400 font-medium">Automate document collection and history tracking by 70%.</p>
+                            <h3 className="text-xs font-black uppercase tracking-[0.4em] text-ree-green mb-12">Business Value</h3>
+                            <div className="space-y-12">
+                                <div className="relative pl-20 group">
+                                    <div className="absolute left-0 top-0 text-5xl group-hover:scale-125 transition-transform duration-500">🚀</div>
+                                    <h4 className="text-2xl font-black text-white mb-3 tracking-tight">Faster Tax Operations</h4>
+                                    <p className="text-slate-400 text-lg font-medium leading-relaxed">Automate document collection and history tracking by 70%.</p>
                                 </div>
-                                <div className="relative pl-12">
-                                    <div className="absolute left-0 top-0 text-3xl">🛡️</div>
-                                    <h4 className="text-xl font-black mb-2">Zero-Error Audits</h4>
-                                    <p className="text-gray-400 font-medium">Maintain immutable centralized tax records ready for any inspection.</p>
+                                <div className="relative pl-20 group">
+                                    <div className="absolute left-0 top-0 text-5xl group-hover:scale-125 transition-transform duration-500">🛡️</div>
+                                    <h4 className="text-2xl font-black text-white mb-3 tracking-tight">Zero-Error Audits</h4>
+                                    <p className="text-slate-400 text-lg font-medium leading-relaxed">Maintain immutable centralized tax records ready for any inspection.</p>
                                 </div>
-                                <div className="relative pl-12 opacity-60">
-                                    <div className="absolute left-0 top-0 text-3xl">🏛️</div>
-                                    <h4 className="text-xl font-black mb-2 italic">For Governments (Future)</h4>
-                                    <p className="text-gray-400 font-medium italic">Higher compliance rates and reduced revenue leakage through digital transparency.</p>
+                                <div className="relative pl-20 group opacity-60 hover:opacity-100 transition-opacity">
+                                    <div className="absolute left-0 top-0 text-5xl group-hover:scale-125 transition-transform duration-500">🏛️</div>
+                                    <h4 className="text-2xl font-black text-white mb-3 tracking-tight italic">For Governments (Future)</h4>
+                                    <p className="text-slate-400 text-lg font-medium italic leading-relaxed">Higher compliance rates and reduced revenue leakage through digital transparency.</p>
                                 </div>
                             </div>
                         </div>
@@ -456,19 +489,26 @@ const Home = () => {
             </section>
 
             {/* Call to Action */}
-            <section className="py-16 md:py-32 bg-ree-green text-white text-center">
-                <div className="max-w-4xl mx-auto px-6">
-                    <h2 className="text-4xl md:text-6xl font-black mb-12 tracking-tight">Deploy the Infrastructure.</h2>
-                    <p className="text-xl text-white/80 font-medium mb-12">
-                        Standardize your tax workflows today with Ree-fond's API modules.
-                    </p>
-                    <button className="bg-white text-ree-green px-12 py-5 rounded-2xl font-black shadow-2xl hover:bg-ree-light hover:text-white transition-all scale-110">
-                        GET API ACCESS
-                    </button>
+            <section className="relative py-32 md:py-40 overflow-hidden bg-ree-green">
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-ree-green opacity-50 pointer-events-none" />
+                <div className="max-w-5xl mx-auto px-6 relative z-10 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <h2 className="text-5xl md:text-8xl font-black text-ree-gray mb-10 tracking-tighter leading-none">Deploy the <br />Infrastructure.</h2>
+                        <p className="text-2xl text-ree-gray/80 font-bold mb-16 max-w-3xl mx-auto leading-relaxed">
+                            Standardize your tax workflows today with Nigeria's most resilient tax API modules.
+                        </p>
+                        <button className="group relative overflow-hidden bg-ree-gray text-white px-16 py-6 rounded-[2rem] font-black text-xl shadow-2xl hover:scale-105 transition-all">
+                            <span className="relative z-10 uppercase tracking-[0.2em]">Request API Access</span>
+                            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        </button>
+                    </motion.div>
                 </div>
             </section>
         </div >
     )
 }
-
 export default Home

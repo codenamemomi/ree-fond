@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { apiData, guides } from '../data/apiData'
 
 const fadeInUp = {
-    hidden: { opacity: 0, y: 15 },
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+        scale: 1,
+        transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
     }
 }
 
@@ -16,10 +17,20 @@ const staggerContainer = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.05
+            staggerChildren: 0.1,
+            delayChildren: 0.2
         }
     }
 }
+
+const BackgroundDecorations = () => (
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-ree-green/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] bg-ree-light/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-[20%] right-[10%] w-[15%] h-[15%] bg-blue-500/5 rounded-full blur-[80px]" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+    </div>
+)
 
 const MethodBadge = ({ method }) => {
     const colors = {
@@ -47,19 +58,20 @@ const CodeBlock = ({ label, code }) => {
             let highlightedLine = line;
             highlights.forEach(h => {
                 if (line.includes(h)) {
+                    const parts = line.split(h);
                     highlightedLine = (
                         <span key={i} className="block group relative">
-                            <span className="opacity-40">{line.substring(0, line.indexOf(h))}</span>
-                            <span className="text-ree-light font-bold bg-ree-light/10 px-1 rounded">{h}</span>
-                            <span className="opacity-40">{line.substring(line.indexOf(h) + h.length)}</span>
-                            <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[8px] font-black bg-ree-green text-white px-1.5 py-0.5 rounded uppercase tracking-tighter scale-0 group-hover:scale-100 transition-transform origin-right">2026 Ready</span>
+                            <span className="text-white/40">{parts[0]}</span>
+                            <span className="text-ree-light font-bold bg-ree-light/10 px-1 rounded shadow-sm border border-ree-light/20">{h}</span>
+                            <span className="text-white/40">{parts.slice(1).join(h)}</span>
+                            <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[8px] font-black bg-ree-green text-white px-1.5 py-0.5 rounded uppercase tracking-tighter scale-0 group-hover:scale-100 transition-all duration-200 origin-right shadow-lg">2026 Ready</span>
                         </span>
                     );
                 }
             });
 
             if (typeof highlightedLine === 'string') {
-                return <div key={i} className="opacity-70">{line}</div>;
+                return <div key={i} className="text-white/70">{line || ' '}</div>;
             }
             return highlightedLine;
         });
@@ -74,13 +86,44 @@ const CodeBlock = ({ label, code }) => {
                 ) : null}
             </div>
             <div className="bg-gray-950 rounded-lg p-4 md:p-6 overflow-x-auto border border-white/5 shadow-inner">
-                <pre className="text-xs font-mono leading-relaxed">
+                <pre className="text-xs font-mono leading-relaxed text-gray-300">
                     {renderCode(code)}
                 </pre>
             </div>
         </div>
     );
 }
+
+const ResourceTable = ({ fields }) => (
+    <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/40 backdrop-blur-xl shadow-2xl transition-all hover:bg-white/60 group/table">
+        <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+                <thead>
+                    <tr className="bg-slate-900/5 border-b border-black/5">
+                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Field</th>
+                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Type</th>
+                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Description</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-black/5 font-medium">
+                    {fields.map((field, i) => (
+                        <tr key={i} className="hover:bg-ree-green/[0.02] transition-colors group">
+                            <td className="px-6 py-5">
+                                <code className="text-sm font-black text-gray-800 bg-white/50 px-2.5 py-1 rounded-lg border border-black/5 group-hover:border-ree-green/20 group-hover:text-ree-green transition-all shadow-sm">{field.field}</code>
+                            </td>
+                            <td className="px-6 py-5">
+                                <span className="text-xs font-black text-ree-light uppercase tracking-tight bg-ree-light/5 px-2 py-0.5 rounded-full border border-ree-light/10">{field.type}</span>
+                            </td>
+                            <td className="px-6 py-5 text-sm text-slate-600 leading-relaxed italic group-hover:text-slate-900 transition-colors">
+                                {field.desc}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+)
 
 const GuideView = ({ guide }) => (
     <motion.div
@@ -138,6 +181,10 @@ const GuideView = ({ guide }) => (
                     </ul>
                 )}
 
+                {section.table && (
+                    <ResourceTable fields={section.table} />
+                )}
+
                 {section.code && (
                     <CodeBlock label={section.code.label} code={section.code.snippet} />
                 )}
@@ -147,7 +194,7 @@ const GuideView = ({ guide }) => (
 )
 
 const Docs = () => {
-    const [activeTab, setActiveTab] = useState('Authentication')
+    const [activeTab, setActiveTab] = useState('overview')
     const [search, setSearch] = useState('')
     const [expandedEndpoints, setExpandedEndpoints] = useState({})
 
@@ -170,24 +217,56 @@ const Docs = () => {
     return (
         <div className="min-h-screen bg-slate-50">
             {/* Header */}
-            <section className="bg-white pt-32 pb-16 border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12">
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                        <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tighter mb-6">API <span className="text-ree-green">Documentation</span></h1>
-                        <p className="text-xl text-gray-500 font-medium max-w-2xl mb-12 italic">
-                            Base URL: <code className="bg-gray-100 px-2 py-1 rounded text-ree-green">/api/v1</code>
+            <section className="relative min-h-[60vh] flex items-center pt-32 pb-24 overflow-hidden bg-slate-950">
+                {/* Background Image with Overlay */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="/home/codenamemomi/.gemini/antigravity/brain/9c304481-194a-4b95-b414-3abb02b58d6f/api_docs_header_bg_1768532446734.png"
+                        alt="Background"
+                        className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-110 blur-[2px]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/80 to-[#f8fafc]" />
+                </div>
+
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 w-full">
+                    <motion.div
+                        initial={{ opacity: 0, y: 40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ree-green/10 border border-ree-green/20 backdrop-blur-md mb-8"
+                        >
+                            <span className="w-2 h-2 rounded-full bg-ree-green animate-pulse" />
+                            <span className="text-[10px] font-black text-ree-green uppercase tracking-[0.2em]">Developer Portal v1.0</span>
+                        </motion.div>
+
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-8 leading-[0.9]">
+                            Unleash the <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-ree-green via-ree-light to-emerald-400">Power of Tax.</span>
+                        </h1>
+
+                        <p className="text-base md:text-lg text-slate-300 font-medium max-w-2xl mb-12 leading-relaxed">
+                            Integrate Nigeria's most advanced tax infrastructure. <br />
+                            Base URL: <code className="bg-white/10 text-ree-light px-3 py-1 rounded-lg border border-white/10 backdrop-blur-md ml-2 inline-block shadow-inner font-mono text-sm">/api/v1</code>
                         </p>
 
-                        <div className="relative max-w-xl">
-                            <input
-                                type="text"
-                                placeholder="Search endpoints, paths, or actions..."
-                                className="w-full px-6 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ree-green/20 focus:border-ree-green outline-none transition-all shadow-sm font-medium"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <div className="relative max-w-2xl group">
+                            <div className="absolute -inset-1 bg-gradient-to-r from-ree-green to-emerald-500 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="Search endpoints, models, or guides..."
+                                    className="w-full px-8 py-5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 backdrop-blur-2xl focus:ring-2 focus:ring-ree-green/30 focus:border-ree-green/50 outline-none transition-all shadow-2xl font-medium text-lg lg:text-xl"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-ree-green transition-colors">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                </div>
                             </div>
                         </div>
                     </motion.div>
@@ -195,52 +274,86 @@ const Docs = () => {
             </section>
 
             {/* Content */}
-            <section className="py-20">
+            <section className="relative z-10 -mt-12 pb-32">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-16">
                     {/* Sidebar Tabs */}
-                    <aside className="w-full lg:w-64 shrink-0 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 -mx-6 lg:mx-0 px-6 lg:px-0">
-                        <div className="flex lg:block gap-4 lg:gap-2 lg:sticky lg:top-32 min-w-max lg:min-w-0">
+                    <aside className="w-full lg:w-72 shrink-0">
+                        <div className="flex flex-wrap lg:flex-col gap-3 lg:gap-2 lg:sticky lg:top-32 bg-white/40 backdrop-blur-md p-3 rounded-[2.5rem] border border-white/20 shadow-2xl overflow-x-auto lg:overflow-visible no-scrollbar">
                             {/* Guides Section */}
-                            <h3 className="hidden lg:block text-xs font-black uppercase tracking-[0.2em] text-gray-400 mb-6 px-4">Guides</h3>
+                            <h3 className="hidden lg:block text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 px-4 mt-4">Guides</h3>
                             <button
-                                onClick={() => setActiveTab('authentication')}
-                                className={`relative w-auto lg:w-full text-left px-6 lg:px-4 py-2 lg:py-3 rounded-full lg:rounded-xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === 'authentication'
+                                onClick={() => setActiveTab('overview')}
+                                className={`relative w-auto lg:w-full text-left px-6 lg:px-4 py-2 lg:py-3 rounded-full lg:rounded-xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === 'overview'
                                     ? 'text-white'
                                     : 'text-gray-500 hover:bg-white hover:text-ree-gray'
                                     }`}
                             >
-                                {activeTab === 'authentication' && (
+                                {activeTab === 'overview' && (
                                     <motion.div
                                         layoutId="activeTab"
                                         className="absolute inset-0 bg-ree-green rounded-full lg:rounded-xl shadow-lg shadow-ree-green/20"
                                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                     />
                                 )}
+                                <span className="relative z-10">Overview</span>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('authentication')}
+                                className={`relative w-auto lg:w-full text-left px-6 lg:px-5 py-3 rounded-2xl lg:rounded-2xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === 'authentication'
+                                    ? 'text-white'
+                                    : 'text-slate-500 hover:bg-white/60 hover:text-ree-gray'
+                                    }`}
+                            >
+                                {activeTab === 'authentication' && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-2xl shadow-lg shadow-ree-green/30"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
                                 <span className="relative z-10">Authentication</span>
-                                <span className="relative z-10 text-[10px] bg-ree-light/10 text-ree-light px-1.5 py-0.5 rounded">NEW</span>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('schematics')}
+                                className={`relative w-auto lg:w-full text-left px-6 lg:px-5 py-3 rounded-2xl lg:rounded-2xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === 'schematics'
+                                    ? 'text-white'
+                                    : 'text-slate-500 hover:bg-white/60 hover:text-ree-gray'
+                                    }`}
+                            >
+                                {activeTab === 'schematics' && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-2xl shadow-lg shadow-ree-green/30"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                                <span className="relative z-10">Schematics</span>
+                                <span className="relative z-10 text-[10px] bg-ree-light/10 text-ree-light px-2 py-0.5 rounded-lg border border-ree-light/20 ml-2">CORE</span>
                             </button>
 
                             <div className="hidden lg:block h-8" /> {/* Spacer */}
 
-                            <h3 className="hidden lg:block text-xs font-black uppercase tracking-[0.2em] text-gray-400 mb-6 px-4">References</h3>
+                            <h3 className="hidden lg:block text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 px-4">References</h3>
                             {apiData.map((cat) => (
                                 <button
                                     key={cat.category}
                                     onClick={() => setActiveTab(cat.category)}
-                                    className={`relative w-auto lg:w-full text-left px-6 lg:px-4 py-2 lg:py-3 rounded-full lg:rounded-xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === cat.category
+                                    className={`relative w-auto lg:w-full text-left px-6 lg:px-5 py-3 rounded-2xl lg:rounded-2xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === cat.category
                                         ? 'text-white'
-                                        : 'text-gray-500 hover:bg-white hover:text-ree-gray'
+                                        : 'text-slate-500 hover:bg-white/60 hover:text-ree-gray'
                                         }`}
                                 >
                                     {activeTab === cat.category && (
                                         <motion.div
                                             layoutId="activeTab"
-                                            className="absolute inset-0 bg-ree-green rounded-full lg:rounded-xl shadow-lg shadow-ree-green/20"
+                                            className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-2xl shadow-lg shadow-ree-green/30"
                                             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                         />
                                     )}
                                     <span className="relative z-10">{cat.category}</span>
-                                    <span className={`relative z-10 text-[10px] px-1.5 py-0.5 rounded ${activeTab === cat.category ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-gray-200'}`}>
+                                    <span className={`relative z-10 text-[10px] px-2 py-0.5 rounded-lg border transition-colors ${activeTab === cat.category ? 'bg-white/20 text-white border-white/20' : 'bg-slate-100 text-slate-400 border-slate-200 group-hover:bg-slate-200'}`}>
                                         {cat.endpoints.length}
                                     </span>
                                 </button>
@@ -271,24 +384,28 @@ const Docs = () => {
                                                     <motion.div
                                                         key={i}
                                                         variants={fadeInUp}
-                                                        className={`bg-white rounded-2xl border transition-all overflow-hidden ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'shadow-lg border-ree-green/30 ring-1 ring-ree-green/20' : 'border-gray-100 shadow-sm hover:shadow-md'
+                                                        className={`bg-white/60 backdrop-blur-xl rounded-3xl border transition-all overflow-hidden group/card ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'shadow-2xl border-ree-green/30 ring-1 ring-ree-green/20 -translate-y-1' : 'border-black/5 shadow-sm hover:shadow-xl hover:border-black/10'
                                                             }`}
                                                     >
                                                         <div
-                                                            className="p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4"
+                                                            className="p-8 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-6"
                                                             onClick={() => toggleEndpoint(endpoint.method, endpoint.path)}
                                                         >
+                                                            <div className="flex flex-col gap-3">
+                                                                <div className="flex items-center gap-4">
+                                                                    <MethodBadge method={endpoint.method} />
+                                                                    <code className="text-base font-black text-gray-900 tracking-tight group-hover/card:text-ree-green transition-colors">
+                                                                        {endpoint.path}
+                                                                    </code>
+                                                                </div>
+                                                                <div className="text-slate-500 font-semibold text-sm pl-0 md:pl-16">
+                                                                    {endpoint.desc}
+                                                                </div>
+                                                            </div>
                                                             <div className="flex items-center gap-4">
-                                                                <MethodBadge method={endpoint.method} />
-                                                                <code className="text-sm font-black text-gray-800 tracking-tight">
-                                                                    {endpoint.path}
-                                                                </code>
-                                                            </div>
-                                                            <div className="text-gray-500 font-medium text-sm">
-                                                                {endpoint.desc}
-                                                            </div>
-                                                            <div className={`text-gray-400 transition-transform ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'rotate-180' : ''}`}>
-                                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                                                <div className={`p-2 rounded-full bg-slate-50 border border-slate-100 text-slate-400 transition-all group-hover/card:bg-ree-green group-hover/card:text-white group-hover/card:border-ree-green ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'rotate-180 bg-ree-green text-white border-ree-green' : ''}`}>
+                                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
+                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -298,7 +415,7 @@ const Docs = () => {
                                                                     initial={{ height: 0, opacity: 0 }}
                                                                     animate={{ height: 'auto', opacity: 1 }}
                                                                     exit={{ height: 0, opacity: 0 }}
-                                                                    className="bg-gray-50 px-6 pb-6 border-t border-gray-100"
+                                                                    className="bg-slate-900 px-8 pb-8 border-t border-white/5"
                                                                 >
                                                                     {endpoint.req && <CodeBlock label="Request Body" code={endpoint.req} />}
                                                                     {endpoint.res && <CodeBlock label="Response Example" code={endpoint.res} />}
@@ -321,16 +438,26 @@ const Docs = () => {
             </section>
 
             {/* Developer CTA */}
-            <section className="py-32 bg-ree-gray text-white text-center">
-                <div className="max-w-4xl mx-auto px-6">
-                    <h2 className="text-3xl md:text-5xl font-black mb-8">Ready to Build?</h2>
-                    <p className="text-lg text-gray-400 mb-12 font-medium">
-                        Join our early adopter fleet and start integrating Nigeria's tax infrastructure into your platform today.
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6 font-bold">
-                        <button className="bg-ree-green px-10 py-4 rounded-xl hover:bg-ree-light transition-all shadow-xl">Request Sandbox Keys</button>
-                        <button className="text-gray-400 hover:text-white transition-all underline decoration-2 underline-offset-4 tracking-[0.1em] uppercase text-sm">Join Developer Discord</button>
-                    </div>
+            <section className="relative py-40 overflow-hidden bg-slate-950">
+                <div className="absolute inset-0 bg-gradient-to-t from-ree-green/20 to-transparent opacity-30 pointer-events-none" />
+                <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <h2 className="text-4xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-tight">Ready to <span className="text-ree-green">Build?</span></h2>
+                        <p className="text-xl text-slate-400 mb-12 font-medium leading-relaxed max-w-2xl mx-auto">
+                            Join our fleet of early adopters and start integrating Nigeria's tax infrastructure into your platform today.
+                        </p>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 font-black">
+                            <button className="relative group overflow-hidden bg-ree-green px-12 py-5 rounded-2xl hover:bg-ree-light transition-all shadow-2xl shadow-ree-green/20">
+                                <span className="relative z-10 text-ree-gray">Request Sandbox Keys</span>
+                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                            </button>
+                            <button className="text-slate-300 hover:text-white transition-all underline decoration-2 underline-offset-8 tracking-[0.1em] uppercase text-xs">Join Developer Discord</button>
+                        </div>
+                    </motion.div>
                 </div>
             </section>
         </div>
