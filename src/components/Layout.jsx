@@ -78,7 +78,7 @@ const Layout = ({ children }) => {
                             </Link>
                         ))}
                         <Link
-                            to="/contact"
+                            to="/early-access"
                             className="group relative overflow-hidden bg-ree-green text-white px-10 py-4 rounded-[1.5rem] font-black text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl shadow-ree-green/20"
                         >
                             <span className="relative z-10">Early Access</span>
@@ -122,7 +122,7 @@ const Layout = ({ children }) => {
                             </Link>
                         ))}
                         <Link
-                            to="/contact"
+                            to="/early-access"
                             className="bg-ree-green text-white px-8 py-3 rounded-full font-bold shadow-2xl text-base mt-4"
                         >
                             Get Early Access
