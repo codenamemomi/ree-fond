@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { apiData, guides } from '../data/apiData'
+import BackgroundDecorations from "../components/BackgroundDecorations"
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30, scale: 0.95 },
@@ -22,15 +23,6 @@ const staggerContainer = {
         }
     }
 }
-
-const BackgroundDecorations = () => (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-ree-green/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] bg-ree-light/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-[20%] right-[10%] w-[15%] h-[15%] bg-blue-500/5 rounded-full blur-[80px]" />
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-    </div>
-)
 
 const MethodBadge = ({ method }) => {
     const colors = {
@@ -217,7 +209,7 @@ const Docs = () => {
     return (
         <div className="min-h-screen bg-slate-50">
             {/* Header */}
-            <section className="relative min-h-[60vh] flex items-center pt-32 pb-24 overflow-hidden bg-slate-950">
+            <section className="relative min-h-[40vh] flex items-center pt-20 lg:pt-24 pb-12 lg:pb-16 overflow-hidden bg-slate-950">
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0 z-0">
                     <img
@@ -238,20 +230,17 @@ const Docs = () => {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.2 }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ree-green/10 border border-ree-green/20 backdrop-blur-md mb-8"
                         >
-                            <span className="w-2 h-2 rounded-full bg-ree-green animate-pulse" />
-                            <span className="text-[10px] font-black text-ree-green uppercase tracking-[0.2em]">Developer Portal v1.0</span>
                         </motion.div>
 
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-8 leading-[0.9]">
+                        <h1 className="text-4xl md:text-7xl lg:text-9xl font-black text-white tracking-tighter mb-10 leading-[0.8] italic">
                             Unleash the <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-ree-green via-ree-light to-emerald-400">Power of Tax.</span>
                         </h1>
 
-                        <p className="text-base md:text-lg text-slate-300 font-medium max-w-2xl mb-12 leading-relaxed">
-                            Integrate Nigeria's most advanced tax infrastructure. <br />
-                            Base URL: <code className="bg-white/10 text-ree-light px-3 py-1 rounded-lg border border-white/10 backdrop-blur-md ml-2 inline-block shadow-inner font-mono text-sm">/api/v1</code>
+                        <p className="text-lg md:text-xl text-slate-300 font-medium max-w-2xl mb-12 leading-tight">
+                            Integrate Nigeria's most advanced tax infrastructure.
+                            <span className="block mt-4 text-xs font-mono opacity-50">Base URL: <code className="text-ree-green">/api/v1</code></span>
                         </p>
 
                         <div className="relative max-w-2xl group">
@@ -260,7 +249,7 @@ const Docs = () => {
                                 <input
                                     type="text"
                                     placeholder="Search endpoints, models, or guides..."
-                                    className="w-full px-8 py-5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 backdrop-blur-2xl focus:ring-2 focus:ring-ree-green/30 focus:border-ree-green/50 outline-none transition-all shadow-2xl font-medium text-lg lg:text-xl"
+                                    className="w-full pl-8 pr-16 py-5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 backdrop-blur-2xl focus:ring-2 focus:ring-ree-green/30 focus:border-ree-green/50 outline-none transition-all shadow-2xl font-medium text-lg lg:text-xl"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
@@ -274,24 +263,24 @@ const Docs = () => {
             </section>
 
             {/* Content */}
-            <section className="relative z-10 -mt-12 pb-32">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-16">
+            <section className="relative z-10 -mt-8 lg:-mt-12 pb-20 lg:pb-32">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-8 lg:gap-16">
                     {/* Sidebar Tabs */}
                     <aside className="w-full lg:w-72 shrink-0">
-                        <div className="flex flex-wrap lg:flex-col gap-3 lg:gap-2 lg:sticky lg:top-32 bg-white/40 backdrop-blur-md p-3 rounded-[2.5rem] border border-white/20 shadow-2xl overflow-x-auto lg:overflow-visible no-scrollbar">
+                        <div className="flex flex-col gap-1 lg:gap-1.5 lg:sticky lg:top-32 p-1.5 rounded-[2.5rem] bg-white/10 backdrop-blur-3xl border border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] lg:overflow-visible no-scrollbar">
                             {/* Guides Section */}
-                            <h3 className="hidden lg:block text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 px-4 mt-4">Guides</h3>
+                            <h3 className="hidden lg:block text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 mb-1 px-6 mt-4 opacity-50 italic">Guides</h3>
                             <button
                                 onClick={() => setActiveTab('overview')}
-                                className={`relative w-auto lg:w-full text-left px-6 lg:px-4 py-2 lg:py-3 rounded-full lg:rounded-xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === 'overview'
+                                className={`relative w-full text-left px-6 py-2.5 rounded-[2rem] font-black transition-all text-xs lg:text-[10px] uppercase tracking-widest flex items-center justify-between group whitespace-nowrap ${activeTab === 'overview'
                                     ? 'text-white'
-                                    : 'text-gray-500 hover:bg-white hover:text-ree-gray'
+                                    : 'text-slate-600 hover:text-ree-green'
                                     }`}
                             >
                                 {activeTab === 'overview' && (
                                     <motion.div
-                                        layoutId="activeTab"
-                                        className="absolute inset-0 bg-ree-green rounded-full lg:rounded-xl shadow-lg shadow-ree-green/20"
+                                        layoutId="activeTabDoc"
+                                        className="absolute inset-0 bg-ree-green rounded-[2rem] shadow-lg shadow-ree-green/20"
                                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                     />
                                 )}
@@ -300,15 +289,15 @@ const Docs = () => {
 
                             <button
                                 onClick={() => setActiveTab('authentication')}
-                                className={`relative w-auto lg:w-full text-left px-6 lg:px-5 py-3 rounded-2xl lg:rounded-2xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === 'authentication'
+                                className={`relative w-full text-left px-6 py-2.5 rounded-[2rem] font-black transition-all text-xs lg:text-[10px] uppercase tracking-widest flex items-center justify-between group whitespace-nowrap ${activeTab === 'authentication'
                                     ? 'text-white'
-                                    : 'text-slate-500 hover:bg-white/60 hover:text-ree-gray'
+                                    : 'text-slate-600 hover:text-ree-green'
                                     }`}
                             >
                                 {activeTab === 'authentication' && (
                                     <motion.div
-                                        layoutId="activeTab"
-                                        className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-2xl shadow-lg shadow-ree-green/30"
+                                        layoutId="activeTabDoc"
+                                        className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-[2rem] shadow-lg shadow-ree-green/30"
                                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                     />
                                 )}
@@ -317,43 +306,41 @@ const Docs = () => {
 
                             <button
                                 onClick={() => setActiveTab('schematics')}
-                                className={`relative w-auto lg:w-full text-left px-6 lg:px-5 py-3 rounded-2xl lg:rounded-2xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === 'schematics'
+                                className={`relative w-full text-left px-6 py-2.5 rounded-[2rem] font-black transition-all text-xs lg:text-[10px] uppercase tracking-widest flex items-center justify-between group whitespace-nowrap ${activeTab === 'schematics'
                                     ? 'text-white'
-                                    : 'text-slate-500 hover:bg-white/60 hover:text-ree-gray'
+                                    : 'text-slate-600 hover:text-ree-green'
                                     }`}
                             >
                                 {activeTab === 'schematics' && (
                                     <motion.div
-                                        layoutId="activeTab"
-                                        className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-2xl shadow-lg shadow-ree-green/30"
+                                        layoutId="activeTabDoc"
+                                        className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-[2rem] shadow-lg shadow-ree-green/30"
                                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                     />
                                 )}
                                 <span className="relative z-10">Schematics</span>
-                                <span className="relative z-10 text-[10px] bg-ree-light/10 text-ree-light px-2 py-0.5 rounded-lg border border-ree-light/20 ml-2">CORE</span>
+                                <span className={`relative z-10 text-[8px] px-2 py-0.5 rounded-full border transition-colors ${activeTab === 'schematics' ? 'bg-white/20 text-white border-white/20' : 'bg-slate-100 text-slate-400 border-slate-200'}`}>CORE</span>
                             </button>
 
-                            <div className="hidden lg:block h-8" /> {/* Spacer */}
-
-                            <h3 className="hidden lg:block text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 px-4">References</h3>
+                            <h3 className="hidden lg:block text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 mb-1 px-6 mt-8 opacity-50 italic">References</h3>
                             {apiData.map((cat) => (
                                 <button
                                     key={cat.category}
                                     onClick={() => setActiveTab(cat.category)}
-                                    className={`relative w-auto lg:w-full text-left px-6 lg:px-5 py-3 rounded-2xl lg:rounded-2xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === cat.category
+                                    className={`relative w-full text-left px-6 py-2.5 rounded-[2rem] font-black transition-all text-xs lg:text-[10px] uppercase tracking-widest flex items-center justify-between group whitespace-nowrap ${activeTab === cat.category
                                         ? 'text-white'
-                                        : 'text-slate-500 hover:bg-white/60 hover:text-ree-gray'
+                                        : 'text-slate-600 hover:text-ree-green'
                                         }`}
                                 >
                                     {activeTab === cat.category && (
                                         <motion.div
-                                            layoutId="activeTab"
-                                            className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-2xl shadow-lg shadow-ree-green/30"
+                                            layoutId="activeTabDoc"
+                                            className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-[2rem] shadow-lg shadow-ree-green/30"
                                             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                         />
                                     )}
                                     <span className="relative z-10">{cat.category}</span>
-                                    <span className={`relative z-10 text-[10px] px-2 py-0.5 rounded-lg border transition-colors ${activeTab === cat.category ? 'bg-white/20 text-white border-white/20' : 'bg-slate-100 text-slate-400 border-slate-200 group-hover:bg-slate-200'}`}>
+                                    <span className={`relative z-10 text-[8px] px-2 py-0.5 rounded-full border transition-colors ${activeTab === cat.category ? 'bg-white/20 text-white border-white/20' : 'bg-slate-100 text-slate-400 border-slate-200'}`}>
                                         {cat.endpoints.length}
                                     </span>
                                 </button>
@@ -362,7 +349,7 @@ const Docs = () => {
                     </aside>
 
                     {/* Docs Content */}
-                    <div className="flex-1 space-y-16">
+                    <div className="flex-1 space-y-10 lg:space-y-16">
                         <AnimatePresence mode="wait">
                             {guides[activeTab] ? (
                                 <GuideView key={activeTab} guide={guides[activeTab]} />
@@ -388,7 +375,7 @@ const Docs = () => {
                                                             }`}
                                                     >
                                                         <div
-                                                            className="p-8 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-6"
+                                                            className="p-6 lg:p-8 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-6"
                                                             onClick={() => toggleEndpoint(endpoint.method, endpoint.path)}
                                                         >
                                                             <div className="flex flex-col gap-3">
@@ -438,7 +425,7 @@ const Docs = () => {
             </section>
 
             {/* Developer CTA */}
-            <section className="relative py-40 overflow-hidden bg-slate-950">
+            <section className="relative py-24 lg:py-40 overflow-hidden bg-slate-950">
                 <div className="absolute inset-0 bg-gradient-to-t from-ree-green/20 to-transparent opacity-30 pointer-events-none" />
                 <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
                     <motion.div
@@ -446,7 +433,7 @@ const Docs = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-4xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-tight">Ready to <span className="text-ree-green">Build?</span></h2>
+                        <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-white mb-8 tracking-tighter leading-tight">Ready to <span className="text-ree-green">Build?</span></h2>
                         <p className="text-xl text-slate-400 mb-12 font-medium leading-relaxed max-w-2xl mx-auto">
                             Join our fleet of early adopters and start integrating Nigeria's tax infrastructure into your platform today.
                         </p>
