@@ -9,6 +9,17 @@ const fadeInUp = {
     }
 }
 
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.15,
+            delayChildren: 0.2
+        }
+    }
+}
+
 const About = () => {
     return (
         <div className="bg-white">
@@ -29,31 +40,43 @@ const About = () => {
             {/* The Vision Section */}
             <section className="py-32">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-20">
-                    <div>
-                        <h2 className="text-3xl font-black text-ree-gray mb-8 uppercase tracking-widest">Our Thesis</h2>
-                        <div className="space-y-8 text-lg font-medium text-gray-500 leading-relaxed">
+                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+                        <h2 className="text-3xl font-black text-ree-gray mb-8 uppercase tracking-[0.3em]">Our Thesis</h2>
+                        <div className="space-y-8 text-xl font-medium text-gray-500 leading-relaxed">
                             <p>
-                                Nigeria’s tax-to-GDP ratio is ~11%. The global average is ~20%. This gap isn't just about willingness to pay—it's about the <span className="text-ree-gray font-bold">frictional cost of compliance</span>.
+                                Nigeria’s tax-to-GDP ratio is ~11%. The global average is ~20%. This gap isn't just about willingness to pay—it's about the <span className="text-ree-gray font-bold decoration-ree-green/30 decoration-thickness-4 underline underline-offset-8">frictional cost of compliance</span>.
                             </p>
                             <p>
                                 Governments care about revenue visibility, not buzzwords. By building the infrastructure layer now, we earn the trust required to eventually become the official government integration layer.
                             </p>
                         </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                    >
                         {[
-                            { t: 'Be Early', d: 'Earn trust long before official automation is mandated.' },
-                            { t: 'Be Precise', d: 'Standardize filing history and compliance timelines.' },
-                            { t: 'Be Resilient', d: 'Private infrastructure today, government partner tomorrow.' },
-                            { t: 'Be Trusted', d: 'Secure, NDPR-compliant data handling at every layer.' }
+                            { t: 'Be Early', d: 'Earn trust long before official automation is mandated.', i: '🌅' },
+                            { t: 'Be Precise', d: 'Standardize filing history and compliance timelines.', i: '🎯' },
+                            { t: 'Be Resilient', d: 'Private infrastructure today, government partner tomorrow.', i: '🏗️' },
+                            { t: 'Be Trusted', d: 'Secure, NDPR-compliant data handling at every layer.', i: '🔐' }
                         ].map((item, i) => (
-                            <div key={i} className="bg-gray-50 p-8 rounded-3xl border border-gray-100">
-                                <h4 className="text-xl font-bold text-ree-green mb-4">{item.t}</h4>
-                                <p className="text-sm font-medium text-gray-500">{item.d}</p>
-                            </div>
+                            <motion.div
+                                key={i}
+                                variants={fadeInUp}
+                                whileHover={{ scale: 1.05, y: -5 }}
+                                className="bg-gray-50 p-8 rounded-[2rem] border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-shadow"
+                            >
+                                <div className="text-3xl mb-4">{item.i}</div>
+                                <h4 className="text-xl font-black text-ree-green mb-4">{item.t}</h4>
+                                <p className="text-sm font-bold text-gray-500 leading-relaxed">{item.d}</p>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
@@ -61,23 +84,25 @@ const About = () => {
             <section className="py-32 bg-ree-green text-white">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center">
                     <h2 className="text-4xl md:text-6xl font-black mb-16 tracking-tight">Earn Trust. Automate Later.</h2>
-                    <div className="grid md:grid-cols-3 gap-12">
-                        <div>
-                            <div className="text-ree-light font-black text-6xl mb-6">#1</div>
-                            <h3 className="text-2xl font-bold mb-4">Infrastructure First</h3>
-                            <p className="opacity-70 font-medium">We focus on the underlying data protocols before building the flashy interfaces.</p>
-                        </div>
-                        <div>
-                            <div className="text-ree-light font-black text-6xl mb-6">#2</div>
-                            <h3 className="text-2xl font-bold mb-4">Zero-Day Audit</h3>
-                            <p className="opacity-70 font-medium">Every filing, every status, every refund is tracked with immutable audit trails.</p>
-                        </div>
-                        <div>
-                            <div className="text-ree-light font-black text-6xl mb-6">#3</div>
-                            <h3 className="text-2xl font-bold mb-4">Inevitable Scale</h3>
-                            <p className="opacity-70 font-medium">Our growth is tied to the inevitable digitization of Nigeria's fiscal ecosystem.</p>
-                        </div>
-                    </div>
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        className="grid md:grid-cols-3 gap-12"
+                    >
+                        {[
+                            { id: '#1', t: 'Infrastructure First', d: 'We focus on the underlying data protocols before building the flashy interfaces.' },
+                            { id: '#2', t: 'Zero-Day Audit', d: 'Every filing, every status, every refund is tracked with immutable audit trails.' },
+                            { id: '#3', t: 'Inevitable Scale', d: 'Our growth is tied to the inevitable digitization of Nigeria\'s fiscal ecosystem.' }
+                        ].map((val, i) => (
+                            <motion.div variants={fadeInUp} key={i}>
+                                <div className="text-ree-light font-black text-7xl mb-6 opacity-40">{val.id}</div>
+                                <h3 className="text-2xl font-black mb-4 tracking-tight">{val.t}</h3>
+                                <p className="opacity-70 font-medium leading-relaxed">{val.d}</p>
+                            </motion.div>
+                        ))}
+                    </motion.div>
                 </div>
             </section>
         </div>

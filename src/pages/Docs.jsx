@@ -1,74 +1,25 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { apiData } from '../data/apiData'
 
-const apiData = [
-    {
-        category: 'Authentication',
-        endpoints: [
-            { method: 'POST', path: '/api/v1/auth/login', desc: 'User authentication and session creation' },
-            { method: 'POST', path: '/api/v1/auth/register', desc: 'Create a new primary user account' },
-            { method: 'POST', path: '/api/v1/auth/register-with-organization', desc: 'Register a new user tied to an organization entity' },
-            { method: 'GET', path: '/api/v1/auth/me', desc: 'Retrieve profile details for the authenticated user' },
-            { method: 'PUT', path: '/api/v1/auth/me', desc: 'Update profile information for the current user' },
-            { method: 'POST', path: '/api/v1/auth/change-password', desc: 'Securely update account password' },
-            { method: 'POST', path: '/api/v1/auth/verify-email/{token}', desc: 'Validate user email via secure token' },
-            { method: 'POST', path: '/api/v1/auth/forgot-password', desc: 'Initiate password recovery workflow' }
-        ]
-    },
-    {
-        category: 'Taxpayers',
-        endpoints: [
-            { method: 'POST', path: '/api/v1/taxpayers', desc: 'Create a new taxpayer record' },
-            { method: 'GET', path: '/api/v1/taxpayers', desc: 'List all managed taxpayer profiles' },
-            { method: 'GET', path: '/api/v1/taxpayers/{id}', desc: 'Retrieve detailed record for a specific taxpayer' },
-            { method: 'PUT', path: '/api/v1/taxpayers/{id}', desc: 'Update specific taxpayer metadata' },
-            { method: 'DELETE', path: '/api/v1/taxpayers/{id}', desc: 'Remove a taxpayer record from the infrastructure' },
-            { method: 'POST', path: '/api/v1/taxpayers/{id}/verify', desc: 'Validate taxpayer identity against shadow records' },
-            { method: 'POST', path: '/api/v1/taxpayers/bulk', desc: 'High-speed ingestion of multiple taxpayer records' },
-            { method: 'GET', path: '/api/v1/taxpayers/{id}/filings', desc: 'Retrieve historical filing list for a taxpayer' },
-            { method: 'GET', path: '/api/v1/taxpayers/stats/summary', desc: 'Global summary of taxpayer demographics and status' },
-            { method: 'GET', path: '/api/v1/taxpayers/search/tin/{tin}', desc: 'Direct lookup by Taxpayer Identification Number' }
-        ]
-    },
-    {
-        category: 'Filings',
-        endpoints: [
-            { method: 'POST', path: '/api/v1/filings', desc: 'Initialize a new tax filing entry' },
-            { method: 'GET', path: '/api/v1/filings', desc: 'List all filings across the organization' },
-            { method: 'GET', path: '/api/v1/filings/{id}', desc: 'Retrieve specific filing data and status' },
-            { method: 'PUT', path: '/api/v1/filings/{id}', desc: 'Modify an unsubmitted filing' },
-            { method: 'POST', path: '/api/v1/filings/{id}/submit', desc: 'Lock and submit filing to the shadow processing layer' },
-            { method: 'POST', path: '/api/v1/filings/{id}/verify', desc: 'Internal verification of submitted filing accuracy' },
-            { method: 'POST', path: '/api/v1/filings/{id}/amendments', desc: 'Create a corrective amendment for an existing filing' },
-            { method: 'GET', path: '/api/v1/filings/calendar/events', desc: 'Retrieve upcoming tax deadlines and events' },
-            { method: 'GET', path: '/api/v1/filings/upcoming/overdue', desc: 'Alert on overdue or high-priority filings' }
-        ]
-    },
-    {
-        category: 'Refunds',
-        endpoints: [
-            { method: 'POST', path: '/api/v1/refunds', desc: 'Initiate a new refund or adjustment case' },
-            { method: 'GET', path: '/api/v1/refunds', desc: 'List all active refund cases' },
-            { method: 'GET', path: '/api/v1/refunds/{id}', desc: 'Detailed view of a specific refund case status' },
-            { method: 'POST', path: '/api/v1/refunds/{id}/submit', desc: 'Formally submit case for tax office review' },
-            { method: 'POST', path: '/api/v1/refunds/{id}/approve', desc: 'Mark refund as approved for disbursement' },
-            { method: 'GET', path: '/api/v1/refunds/{id}/timeline', desc: 'Retrieve the high-fidelity audit trail for a case' },
-            { method: 'GET', path: '/api/v1/refunds/dashboard/metrics', desc: 'Global analytics for refund processing performance' },
-            { method: 'GET', path: '/api/v1/refunds/export/csv', desc: 'Batch export of refund data for external auditing' }
-        ]
-    },
-    {
-        category: 'Compliance',
-        endpoints: [
-            { method: 'GET', path: '/api/v1/compliance/rules', desc: 'List active compliance validation rules' },
-            { method: 'POST', path: '/api/v1/compliance/scores/calculate', desc: 'Trigger compliance score calculation for a taxpayer' },
-            { method: 'GET', path: '/api/v1/compliance/scores/{id}', desc: 'Retrieve health score and risk assessment' },
-            { method: 'GET', path: '/api/v1/compliance/alerts', desc: 'List active compliance alerts and risk flags' },
-            { method: 'POST', path: '/api/v1/compliance/alerts/{id}/resolve', desc: 'Acknowledge and resolve a specific alert' },
-            { method: 'GET', path: '/api/v1/compliance/health', desc: 'Infrastructure-wide compliance system health' }
-        ]
+const fadeInUp = {
+    hidden: { opacity: 0, y: 15 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
     }
-]
+}
+
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.05
+        }
+    }
+}
 
 const MethodBadge = ({ method }) => {
     const colors = {
@@ -84,9 +35,29 @@ const MethodBadge = ({ method }) => {
     )
 }
 
+const CodeBlock = ({ label, code }) => (
+    <div className="mt-4">
+        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">{label}</div>
+        <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto border border-gray-800">
+            <pre className="text-xs font-mono text-gray-300 leading-relaxed">
+                {code}
+            </pre>
+        </div>
+    </div>
+)
+
 const Docs = () => {
     const [activeTab, setActiveTab] = useState('Authentication')
     const [search, setSearch] = useState('')
+    const [expandedEndpoints, setExpandedEndpoints] = useState({})
+
+    const toggleEndpoint = (method, path) => {
+        const key = `${method}:${path}`
+        setExpandedEndpoints(prev => ({
+            ...prev,
+            [key]: !prev[key]
+        }))
+    }
 
     const filteredData = apiData.map(cat => ({
         ...cat,
@@ -98,12 +69,13 @@ const Docs = () => {
 
     return (
         <div className="min-h-screen bg-slate-50">
+            {/* Header */}
             <section className="bg-white pt-32 pb-16 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12">
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                         <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tighter mb-6">API <span className="text-ree-green">Documentation</span></h1>
                         <p className="text-xl text-gray-500 font-medium max-w-2xl mb-12 italic">
-                            Explore the endpoints powering Nigeria's next-gen tax infrastructure layer.
+                            Base URL: <code className="bg-gray-100 px-2 py-1 rounded text-ree-green">/api/v1</code>
                         </p>
 
                         <div className="relative max-w-xl">
@@ -122,6 +94,7 @@ const Docs = () => {
                 </div>
             </section>
 
+            {/* Content */}
             <section className="py-20">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-16">
                     {/* Sidebar Tabs */}
@@ -132,13 +105,20 @@ const Docs = () => {
                                 <button
                                     key={cat.category}
                                     onClick={() => setActiveTab(cat.category)}
-                                    className={`w-full text-left px-4 py-3 rounded-xl font-bold transition-all text-sm flex items-center justify-between ${activeTab === cat.category
-                                            ? 'bg-ree-green text-white shadow-lg shadow-ree-green/20 translate-x-1'
-                                            : 'text-gray-500 hover:bg-white hover:text-ree-gray'
+                                    className={`relative w-full text-left px-4 py-3 rounded-xl font-bold transition-all text-sm flex items-center justify-between group ${activeTab === cat.category
+                                        ? 'text-white'
+                                        : 'text-gray-500 hover:bg-white hover:text-ree-gray'
                                         }`}
                                 >
-                                    {cat.category}
-                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${activeTab === cat.category ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                    {activeTab === cat.category && (
+                                        <motion.div
+                                            layoutId="activeTab"
+                                            className="absolute inset-0 bg-ree-green rounded-xl shadow-lg shadow-ree-green/20"
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                        />
+                                    )}
+                                    <span className="relative z-10">{cat.category}</span>
+                                    <span className={`relative z-10 text-[10px] px-1.5 py-0.5 rounded ${activeTab === cat.category ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-gray-200'}`}>
                                         {cat.endpoints.length}
                                     </span>
                                 </button>
@@ -151,41 +131,59 @@ const Docs = () => {
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeTab + search}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
+                                initial="hidden"
+                                animate="visible"
+                                variants={staggerContainer}
                                 className="space-y-8"
                             >
                                 {filteredData.filter(c => search ? true : c.category === activeTab).map((categorySection) => (
                                     <div key={categorySection.category} className="space-y-6">
                                         {search && (
-                                            <h2 className="text-2xl font-black text-ree-gray pb-4 border-b border-gray-100">{categorySection.category}</h2>
+                                            <motion.h2 variants={fadeInUp} className="text-2xl font-black text-ree-gray pb-4 border-b border-gray-100">{categorySection.category}</motion.h2>
                                         )}
-                                        <div className="grid gap-4">
+                                        <div className="grid gap-6">
                                             {categorySection.endpoints.map((endpoint, i) => (
-                                                <div key={i} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                                                        <div className="flex items-center gap-3">
+                                                <motion.div
+                                                    key={i}
+                                                    variants={fadeInUp}
+                                                    className={`bg-white rounded-2xl border transition-all overflow-hidden ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'shadow-lg border-ree-green/30 ring-1 ring-ree-green/20' : 'border-gray-100 shadow-sm hover:shadow-md'
+                                                        }`}
+                                                >
+                                                    <div
+                                                        className="p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4"
+                                                        onClick={() => toggleEndpoint(endpoint.method, endpoint.path)}
+                                                    >
+                                                        <div className="flex items-center gap-4">
                                                             <MethodBadge method={endpoint.method} />
-                                                            <code className="text-sm font-black text-gray-800 tracking-tight group-hover:text-ree-green transition-colors">
+                                                            <code className="text-sm font-black text-gray-800 tracking-tight">
                                                                 {endpoint.path}
                                                             </code>
                                                         </div>
-                                                        <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                                            <span className="w-1.5 h-1.5 rounded-full bg-ree-light animate-pulse" />
-                                                            Beta Access
+                                                        <div className="text-gray-500 font-medium text-sm">
+                                                            {endpoint.desc}
+                                                        </div>
+                                                        <div className={`text-gray-400 transition-transform ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'rotate-180' : ''}`}>
+                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                                                         </div>
                                                     </div>
-                                                    <p className="text-gray-500 font-medium text-sm leading-relaxed">
-                                                        {endpoint.desc}
-                                                    </p>
-                                                    <div className="mt-6 pt-4 border-t border-gray-50 hidden group-hover:block transition-all animate-in fade-in slide-in-from-top-2">
-                                                        <div className="flex gap-4">
-                                                            <button className="text-[10px] uppercase font-black tracking-widest text-ree-green hover:underline">Get Schema</button>
-                                                            <button className="text-[10px] uppercase font-black tracking-widest text-gray-400 hover:underline">Download SDK</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+
+                                                    <AnimatePresence>
+                                                        {expandedEndpoints[`${endpoint.method}:${endpoint.path}`] && (
+                                                            <motion.div
+                                                                initial={{ height: 0, opacity: 0 }}
+                                                                animate={{ height: 'auto', opacity: 1 }}
+                                                                exit={{ height: 0, opacity: 0 }}
+                                                                className="bg-gray-50 px-6 pb-6 border-t border-gray-100"
+                                                            >
+                                                                {endpoint.req && <CodeBlock label="Request Body" code={endpoint.req} />}
+                                                                {endpoint.res && <CodeBlock label="Response Example" code={endpoint.res} />}
+                                                                {!endpoint.req && !endpoint.res && (
+                                                                    <div className="mt-4 text-sm text-gray-400 italic">No detailed schema available for this endpoint.</div>
+                                                                )}
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </motion.div>
                                             ))}
                                         </div>
                                     </div>
