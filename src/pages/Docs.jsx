@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { apiData } from '../data/apiData'
+import { apiData, guides } from '../data/apiData'
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 15 },
@@ -35,15 +35,115 @@ const MethodBadge = ({ method }) => {
     )
 }
 
-const CodeBlock = ({ label, code }) => (
-    <div className="mt-4">
-        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">{label}</div>
-        <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto border border-gray-800">
-            <pre className="text-xs font-mono text-gray-300 leading-relaxed">
-                {code}
-            </pre>
+const CodeBlock = ({ label, code }) => {
+    const renderCode = (text) => {
+        if (!text) return null;
+
+        // Highlight 2026 specific fields
+        const highlights = ['bvn', 'nin', 'residency_status', 'worldwide_income_flag', 'DEV_LEVY'];
+
+        const lines = text.split('\n');
+        return lines.map((line, i) => {
+            let highlightedLine = line;
+            highlights.forEach(h => {
+                if (line.includes(h)) {
+                    highlightedLine = (
+                        <span key={i} className="block group relative">
+                            <span className="opacity-40">{line.substring(0, line.indexOf(h))}</span>
+                            <span className="text-ree-light font-bold bg-ree-light/10 px-1 rounded">{h}</span>
+                            <span className="opacity-40">{line.substring(line.indexOf(h) + h.length)}</span>
+                            <span className="absolute right-0 top-1/2 -translate-y-1/2 text-[8px] font-black bg-ree-green text-white px-1.5 py-0.5 rounded uppercase tracking-tighter scale-0 group-hover:scale-100 transition-transform origin-right">2026 Ready</span>
+                        </span>
+                    );
+                }
+            });
+
+            if (typeof highlightedLine === 'string') {
+                return <div key={i} className="opacity-70">{line}</div>;
+            }
+            return highlightedLine;
+        });
+    };
+
+    return (
+        <div className="mt-4">
+            <div className="flex items-center justify-between mb-2">
+                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{label}</div>
+                {code.includes('2026') || code.includes('bvn') || code.includes('nin') ? (
+                    <div className="text-[8px] font-black text-ree-green bg-ree-green/10 px-2 py-0.5 rounded-full uppercase tracking-widest border border-ree-green/20">Includes 2026 Ready Fields</div>
+                ) : null}
+            </div>
+            <div className="bg-gray-950 rounded-lg p-4 md:p-6 overflow-x-auto border border-white/5 shadow-inner">
+                <pre className="text-xs font-mono leading-relaxed">
+                    {renderCode(code)}
+                </pre>
+            </div>
         </div>
-    </div>
+    );
+}
+
+const GuideView = ({ guide }) => (
+    <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+        className="space-y-12 max-w-4xl"
+    >
+        <motion.div variants={fadeInUp}>
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight mb-4">{guide.title}</h2>
+            <p className="text-xl text-gray-500 font-medium leading-relaxed">{guide.description}</p>
+        </motion.div>
+
+        {guide.sections.map((section, i) => (
+            <motion.div key={i} variants={fadeInUp} className="space-y-6">
+                <h3 className="text-xl font-black text-ree-gray border-l-4 border-ree-green pl-4">{section.heading}</h3>
+
+                {section.content && (
+                    <p className="text-gray-600 leading-relaxed font-medium">
+                        {section.content.split('`').map((part, j) =>
+                            j % 2 === 1 ? <code key={j} className="bg-gray-100 text-ree-gray px-1.5 py-0.5 rounded text-sm font-black">{part}</code> : part
+                        )}
+                    </p>
+                )}
+
+                {section.badges && (
+                    <div className="flex gap-2">
+                        {section.badges.map(badge => (
+                            <span key={badge} className="bg-ree-green/10 text-ree-green px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider">
+                                {badge}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                {section.roles && (
+                    <div className="grid sm:grid-cols-2 gap-4">
+                        {section.roles.map(role => (
+                            <div key={role.name} className="bg-white border border-gray-200 p-4 rounded-xl">
+                                <div className="font-black text-xs uppercase tracking-widest text-ree-green mb-2">{role.name}</div>
+                                <div className="text-sm text-gray-500 font-medium">{role.desc}</div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {section.list && (
+                    <ul className="space-y-3">
+                        {section.list.map((item, j) => (
+                            <li key={j} className="flex items-start gap-3 text-gray-600 text-sm font-medium">
+                                <span className="text-ree-green mt-1">✓</span>
+                                <span>{item}</span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+
+                {section.code && (
+                    <CodeBlock label={section.code.label} code={section.code.snippet} />
+                )}
+            </motion.div>
+        ))}
+    </motion.div>
 )
 
 const Docs = () => {
@@ -98,14 +198,36 @@ const Docs = () => {
             <section className="py-20">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-16">
                     {/* Sidebar Tabs */}
-                    <aside className="lg:w-64 shrink-0">
-                        <div className="sticky top-32 space-y-2">
-                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 mb-6 px-4">Categories</h3>
+                    <aside className="w-full lg:w-64 shrink-0 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 -mx-6 lg:mx-0 px-6 lg:px-0">
+                        <div className="flex lg:block gap-4 lg:gap-2 lg:sticky lg:top-32 min-w-max lg:min-w-0">
+                            {/* Guides Section */}
+                            <h3 className="hidden lg:block text-xs font-black uppercase tracking-[0.2em] text-gray-400 mb-6 px-4">Guides</h3>
+                            <button
+                                onClick={() => setActiveTab('authentication')}
+                                className={`relative w-auto lg:w-full text-left px-6 lg:px-4 py-2 lg:py-3 rounded-full lg:rounded-xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === 'authentication'
+                                    ? 'text-white'
+                                    : 'text-gray-500 hover:bg-white hover:text-ree-gray'
+                                    }`}
+                            >
+                                {activeTab === 'authentication' && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className="absolute inset-0 bg-ree-green rounded-full lg:rounded-xl shadow-lg shadow-ree-green/20"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                                <span className="relative z-10">Authentication</span>
+                                <span className="relative z-10 text-[10px] bg-ree-light/10 text-ree-light px-1.5 py-0.5 rounded">NEW</span>
+                            </button>
+
+                            <div className="hidden lg:block h-8" /> {/* Spacer */}
+
+                            <h3 className="hidden lg:block text-xs font-black uppercase tracking-[0.2em] text-gray-400 mb-6 px-4">References</h3>
                             {apiData.map((cat) => (
                                 <button
                                     key={cat.category}
                                     onClick={() => setActiveTab(cat.category)}
-                                    className={`relative w-full text-left px-4 py-3 rounded-xl font-bold transition-all text-sm flex items-center justify-between group ${activeTab === cat.category
+                                    className={`relative w-auto lg:w-full text-left px-6 lg:px-4 py-2 lg:py-3 rounded-full lg:rounded-xl font-bold transition-all text-sm flex items-center justify-between gap-3 lg:gap-0 group whitespace-nowrap ${activeTab === cat.category
                                         ? 'text-white'
                                         : 'text-gray-500 hover:bg-white hover:text-ree-gray'
                                         }`}
@@ -113,7 +235,7 @@ const Docs = () => {
                                     {activeTab === cat.category && (
                                         <motion.div
                                             layoutId="activeTab"
-                                            className="absolute inset-0 bg-ree-green rounded-xl shadow-lg shadow-ree-green/20"
+                                            className="absolute inset-0 bg-ree-green rounded-full lg:rounded-xl shadow-lg shadow-ree-green/20"
                                             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                         />
                                     )}
@@ -129,66 +251,70 @@ const Docs = () => {
                     {/* Docs Content */}
                     <div className="flex-1 space-y-16">
                         <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeTab + search}
-                                initial="hidden"
-                                animate="visible"
-                                variants={staggerContainer}
-                                className="space-y-8"
-                            >
-                                {filteredData.filter(c => search ? true : c.category === activeTab).map((categorySection) => (
-                                    <div key={categorySection.category} className="space-y-6">
-                                        {search && (
-                                            <motion.h2 variants={fadeInUp} className="text-2xl font-black text-ree-gray pb-4 border-b border-gray-100">{categorySection.category}</motion.h2>
-                                        )}
-                                        <div className="grid gap-6">
-                                            {categorySection.endpoints.map((endpoint, i) => (
-                                                <motion.div
-                                                    key={i}
-                                                    variants={fadeInUp}
-                                                    className={`bg-white rounded-2xl border transition-all overflow-hidden ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'shadow-lg border-ree-green/30 ring-1 ring-ree-green/20' : 'border-gray-100 shadow-sm hover:shadow-md'
-                                                        }`}
-                                                >
-                                                    <div
-                                                        className="p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4"
-                                                        onClick={() => toggleEndpoint(endpoint.method, endpoint.path)}
+                            {guides[activeTab] ? (
+                                <GuideView key={activeTab} guide={guides[activeTab]} />
+                            ) : (
+                                <motion.div
+                                    key={activeTab + search}
+                                    initial="hidden"
+                                    animate="visible"
+                                    variants={staggerContainer}
+                                    className="space-y-8"
+                                >
+                                    {filteredData.filter(c => search ? true : c.category === activeTab).map((categorySection) => (
+                                        <div key={categorySection.category} className="space-y-6">
+                                            {search && (
+                                                <motion.h2 variants={fadeInUp} className="text-2xl font-black text-ree-gray pb-4 border-b border-gray-100">{categorySection.category}</motion.h2>
+                                            )}
+                                            <div className="grid gap-6">
+                                                {categorySection.endpoints.map((endpoint, i) => (
+                                                    <motion.div
+                                                        key={i}
+                                                        variants={fadeInUp}
+                                                        className={`bg-white rounded-2xl border transition-all overflow-hidden ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'shadow-lg border-ree-green/30 ring-1 ring-ree-green/20' : 'border-gray-100 shadow-sm hover:shadow-md'
+                                                            }`}
                                                     >
-                                                        <div className="flex items-center gap-4">
-                                                            <MethodBadge method={endpoint.method} />
-                                                            <code className="text-sm font-black text-gray-800 tracking-tight">
-                                                                {endpoint.path}
-                                                            </code>
+                                                        <div
+                                                            className="p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4"
+                                                            onClick={() => toggleEndpoint(endpoint.method, endpoint.path)}
+                                                        >
+                                                            <div className="flex items-center gap-4">
+                                                                <MethodBadge method={endpoint.method} />
+                                                                <code className="text-sm font-black text-gray-800 tracking-tight">
+                                                                    {endpoint.path}
+                                                                </code>
+                                                            </div>
+                                                            <div className="text-gray-500 font-medium text-sm">
+                                                                {endpoint.desc}
+                                                            </div>
+                                                            <div className={`text-gray-400 transition-transform ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'rotate-180' : ''}`}>
+                                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                                            </div>
                                                         </div>
-                                                        <div className="text-gray-500 font-medium text-sm">
-                                                            {endpoint.desc}
-                                                        </div>
-                                                        <div className={`text-gray-400 transition-transform ${expandedEndpoints[`${endpoint.method}:${endpoint.path}`] ? 'rotate-180' : ''}`}>
-                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                                                        </div>
-                                                    </div>
 
-                                                    <AnimatePresence>
-                                                        {expandedEndpoints[`${endpoint.method}:${endpoint.path}`] && (
-                                                            <motion.div
-                                                                initial={{ height: 0, opacity: 0 }}
-                                                                animate={{ height: 'auto', opacity: 1 }}
-                                                                exit={{ height: 0, opacity: 0 }}
-                                                                className="bg-gray-50 px-6 pb-6 border-t border-gray-100"
-                                                            >
-                                                                {endpoint.req && <CodeBlock label="Request Body" code={endpoint.req} />}
-                                                                {endpoint.res && <CodeBlock label="Response Example" code={endpoint.res} />}
-                                                                {!endpoint.req && !endpoint.res && (
-                                                                    <div className="mt-4 text-sm text-gray-400 italic">No detailed schema available for this endpoint.</div>
-                                                                )}
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </motion.div>
-                                            ))}
+                                                        <AnimatePresence>
+                                                            {expandedEndpoints[`${endpoint.method}:${endpoint.path}`] && (
+                                                                <motion.div
+                                                                    initial={{ height: 0, opacity: 0 }}
+                                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                                    exit={{ height: 0, opacity: 0 }}
+                                                                    className="bg-gray-50 px-6 pb-6 border-t border-gray-100"
+                                                                >
+                                                                    {endpoint.req && <CodeBlock label="Request Body" code={endpoint.req} />}
+                                                                    {endpoint.res && <CodeBlock label="Response Example" code={endpoint.res} />}
+                                                                    {!endpoint.req && !endpoint.res && (
+                                                                        <div className="mt-4 text-sm text-gray-400 italic">No detailed schema available for this endpoint.</div>
+                                                                    )}
+                                                                </motion.div>
+                                                            )}
+                                                        </AnimatePresence>
+                                                    </motion.div>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </motion.div>
+                                    ))}
+                                </motion.div>
+                            )}
                         </AnimatePresence>
                     </div>
                 </div>

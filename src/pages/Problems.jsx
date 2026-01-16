@@ -34,7 +34,7 @@ const Problems = () => {
     return (
         <div className="bg-white overflow-hidden" ref={containerRef}>
             {/* Problem Hero */}
-            <section className="relative min-h-[90vh] flex items-center pt-24 pb-32">
+            <section className="relative min-h-[90vh] flex items-center pt-20 pb-20 md:pt-24 md:pb-32">
                 <div className="absolute inset-0 z-0">
                     <motion.div
                         initial={{ scale: 1.1, opacity: 0 }}
@@ -57,11 +57,11 @@ const Problems = () => {
                         <span className="inline-block px-4 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-black uppercase tracking-widest mb-8 border border-red-100">
                             The Critical Gap
                         </span>
-                        <h1 className="text-6xl md:text-8xl font-black text-gray-900 tracking-tighter mb-10 leading-[0.85]">
+                        <h1 className="text-4xl md:text-8xl font-black text-gray-900 tracking-tighter mb-10 leading-[0.9] md:leading-[0.85]">
                             Nigeria's Tax Reality is <br />
                             <span className="text-red-500 italic">Broken By Design.</span>
                         </h1>
-                        <p className="text-xl md:text-3xl text-gray-500 font-medium leading-tight max-w-3xl">
+                        <p className="text-lg md:text-3xl text-gray-500 font-medium leading-relaxed md:leading-tight max-w-3xl">
                             From siloed state systems to manual refund claims, the cost of compliance is an invisible tax on every business in Nigeria.
                         </p>
                     </motion.div>
@@ -69,7 +69,7 @@ const Problems = () => {
             </section>
 
             {/* Deep Dive Section 1: Fragmentation */}
-            <section className="py-32 bg-slate-50 relative">
+            <section className="py-16 md:py-32 bg-slate-50 relative">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-24 items-center">
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
@@ -224,6 +224,54 @@ const Problems = () => {
                             </motion.div>
                         ))}
                     </motion.div>
+                </div>
+            </section>
+
+            {/* 2026 Risk Section */}
+            <section className="py-32 bg-red-950 text-white overflow-hidden relative">
+                <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#ef4444_0%,transparent_50%)]" />
+                </div>
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-20 items-center">
+                        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+                            <h2 className="text-4xl md:text-6xl font-black mb-10 tracking-tighter leading-none">
+                                The 2026 <br />
+                                <span className="text-red-500">Complexity Multiplier.</span>
+                            </h2>
+                            <p className="text-xl text-gray-400 font-medium mb-12 leading-relaxed">
+                                The status quo is already failing. The 2026 regime introduction will push manual tax operations over the edge with more disputes, stricter penalties, and mandatory worldwide income disclosures.
+                            </p>
+                            <div className="space-y-6">
+                                {[
+                                    { t: 'Multi-State Development Levies', d: 'New filing types that will break manual spreadsheets.' },
+                                    { t: 'TIN-BVN-NIN Convergence', d: 'Nowhere to hide for non-compliant entities.' },
+                                    { t: 'Automated Penalty Triggers', d: 'Stricter enforcement means zero margin for error.' }
+                                ].map((risk, i) => (
+                                    <div key={i} className="flex gap-4 p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
+                                        <div className="w-1.5 h-full bg-red-500 rounded-full" />
+                                        <div>
+                                            <div className="font-black text-lg mb-1">{risk.t}</div>
+                                            <div className="text-sm font-medium text-gray-400">{risk.d}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            className="bg-white/5 p-12 rounded-[3.5rem] border border-white/10 text-center"
+                        >
+                            <div className="text-8xl mb-8">⚠️</div>
+                            <h3 className="text-3xl font-black mb-6 italic">"Compliance scoring becomes enforcement readiness scoring."</h3>
+                            <p className="text-lg text-gray-400 font-medium mb-10">
+                                In 2026, compliance isn't just about filing—it's about surviving an audit-centric fiscal regime.
+                            </p>
+                            <button className="bg-red-600 text-white px-10 py-4 rounded-xl font-black hover:bg-red-500 transition-all">Audit My Stack</button>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 

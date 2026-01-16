@@ -24,7 +24,7 @@ const About = () => {
     return (
         <div className="bg-white">
             {/* Vision Hero */}
-            <section className="py-32 bg-gray-50 border-b border-gray-100">
+            <section className="py-16 md:py-32 bg-gray-50 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12">
                     <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="max-w-4xl">
                         <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter mb-10 leading-none">
@@ -38,7 +38,7 @@ const About = () => {
             </section>
 
             {/* The Vision Section */}
-            <section className="py-32">
+            <section className="py-16 md:py-32">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-20">
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
                         <h2 className="text-3xl font-black text-ree-gray mb-8 uppercase tracking-[0.3em]">Our Thesis</h2>
@@ -47,8 +47,11 @@ const About = () => {
                                 Nigeria’s tax-to-GDP ratio is ~11%. The global average is ~20%. This gap isn't just about willingness to pay—it's about the <span className="text-ree-gray font-bold decoration-ree-green/30 decoration-thickness-4 underline underline-offset-8">frictional cost of compliance</span>.
                             </p>
                             <p>
-                                Governments care about revenue visibility, not buzzwords. By building the infrastructure layer now, we earn the trust required to eventually become the official government integration layer.
+                                The <strong>2026 Tax Regime</strong> will only widen this gap for those without structural data. By building the infrastructure layer now, we earn the trust required to eventually become the official government integration layer.
                             </p>
+                            <div className="pt-6">
+                                <span className="inline-block px-4 py-1.5 rounded-full bg-ree-green/10 text-ree-green text-xs font-black uppercase tracking-widest border border-ree-green/20">2026 Vision Ready</span>
+                            </div>
                         </div>
                     </motion.div>
 
@@ -81,7 +84,7 @@ const About = () => {
             </section>
 
             {/* Corporate Values */}
-            <section className="py-32 bg-ree-green text-white">
+            <section className="py-16 md:py-32 bg-ree-green text-white">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center">
                     <h2 className="text-4xl md:text-6xl font-black mb-16 tracking-tight">Earn Trust. Automate Later.</h2>
                     <motion.div
