@@ -24,10 +24,8 @@ const EarlyAccess = () => {
         e.preventDefault()
         setStatus('submitting')
 
-        const BASE_URL = import.meta.env.PROD ? 'https://form-forums.vercel.app' : ''
-
         try {
-            const response = await fetch(`${BASE_URL}/api/v1/early-access`, {
+            const response = await fetch('/api/v1/early-access', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

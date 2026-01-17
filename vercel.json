@@ -1,6 +1,10 @@
 {
     "rewrites": [
         {
+            "source": "/api/(.*)",
+            "destination": "https://form-forums.vercel.app/api/$1"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }
