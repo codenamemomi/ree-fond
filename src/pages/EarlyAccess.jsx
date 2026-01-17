@@ -20,15 +20,33 @@ const EarlyAccess = () => {
         { id: 'partner', label: 'Developer / Partner' }
     ]
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         setStatus('submitting')
 
-        // Simulate API call
-        setTimeout(() => {
-            console.log('Form Submitted:', formData)
-            setStatus('success')
-        }, 1500)
+        const BASE_URL = import.meta.env.PROD ? 'https://form-forums.vercel.app' : ''
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/v1/early-access`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+
+            if (response.ok) {
+                setStatus('success')
+            } else {
+                console.error('Submission failed')
+                alert("Something went wrong. Please try again.")
+                setStatus('idle')
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error)
+            alert("Network error. Please try again.")
+            setStatus('idle')
+        }
     }
 
     const handleChange = (e) => {

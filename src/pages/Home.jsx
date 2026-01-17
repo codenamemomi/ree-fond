@@ -1,4 +1,5 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion"
 import { UserIcon, DocumentIcon, CurrencyIcon, ClockIcon, ShieldIcon, FolderIcon, RefreshIcon, BadgeIcon, ChartIcon, LightningIcon, OfficeIcon, ClipboardIcon, LockIcon, RocketIcon } from '../components/icons/IconComponents'
 import BackgroundDecorations from "../components/BackgroundDecorations"
@@ -122,6 +123,21 @@ const Home = () => {
     const titleOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
     const [regime, setRegime] = useState('2026')
 
+    const [textIndex, setTextIndex] = useState(0)
+    const navigate = useNavigate()
+    const heroTexts = [
+        { prefix: "Shadow Tax", suffix: "Infrastructure." },
+        { prefix: "Unified Tax", suffix: "System of Record." },
+        { prefix: "Automated", suffix: "Compliance Layer." }
+    ]
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTextIndex((prev) => (prev + 1) % heroTexts.length)
+        }, 3000)
+        return () => clearInterval(timer)
+    }, [])
+
     return (
         <div className="min-h-screen bg-[#f8fafc] selection:bg-ree-green/20 selection:text-ree-gray overflow-x-hidden" ref={containerRef}>
             <BackgroundDecorations />
@@ -151,13 +167,23 @@ const Home = () => {
                             animate="visible"
                             variants={staggerContainer}
                         >
-                            <motion.h1
-                                variants={fadeInUp}
-                                className="text-4xl md:text-7xl lg:text-9xl font-black text-white tracking-tighter mb-8 leading-[0.8] drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-                            >
-                                Shadow Tax <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-ree-green via-ree-light to-emerald-400">Infrastructure.</span>
-                            </motion.h1>
+                            <div className="min-h-[180px] md:min-h-[250px] mb-8 flex items-center justify-center">
+                                <AnimatePresence mode="wait">
+                                    <motion.h1
+                                        key={textIndex}
+                                        initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+                                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                        exit={{ opacity: 0, y: -30, filter: 'blur(10px)' }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
+                                        className="text-4xl md:text-7xl lg:text-9xl font-black text-white tracking-tighter leading-[0.8] drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                                    >
+                                        {heroTexts[textIndex].prefix} <br />
+                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-ree-green via-ree-light to-emerald-400">
+                                            {heroTexts[textIndex].suffix}
+                                        </span>
+                                    </motion.h1>
+                                </AnimatePresence>
+                            </div>
 
                             <motion.p variants={fadeInUp} className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-16 font-medium leading-relaxed">
                                 Standardizing Nigeria's tax record-keeping through <br className="hidden md:block" /> a resilient, API-first system of record.
@@ -522,7 +548,7 @@ const Home = () => {
                         <p className="text-xl md:text-2xl text-white/80 font-medium mb-20 max-w-3xl mx-auto leading-relaxed">
                             Standardize your tax workflows today with Nigeria's most resilient tax API modules.
                         </p>
-                        <button className="group relative overflow-hidden bg-white text-ree-green px-16 py-7 rounded-[2.5rem] font-black text-2xl transition-all hover:scale-110 active:scale-95 shadow-[0_30px_60px_rgba(0,0,0,0.2)]">
+                        <button onClick={() => navigate('/docs')} className="group relative overflow-hidden bg-white text-ree-green px-16 py-7 rounded-[2.5rem] font-black text-2xl transition-all hover:scale-110 active:scale-95 shadow-[0_30px_60px_rgba(0,0,0,0.2)]">
                             <span className="relative z-10 tracking-widest uppercase">Start Building</span>
                             <div className="absolute inset-0 bg-ree-light translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                         </button>
