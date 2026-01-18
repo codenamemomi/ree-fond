@@ -197,22 +197,22 @@ const Problems = () => {
                         {[
                             {
                                 p: 'Offline Filing History',
-                                s: 'Standardized Digital System of Record',
+                                s: 'Ree-fond Evidence: Immutable System of Record',
                                 Icon: FolderIcon
                             },
                             {
                                 p: 'Opaque Refund Status',
-                                s: 'Real-time Refund Tracking API',
+                                s: 'Ree-fond Revenue: Real-time Workflow Layer',
                                 Icon: RefreshIcon
                             },
                             {
                                 p: 'Fragmented Identities',
-                                s: 'Unified Taxpayer Identity (TIN) Layer',
+                                s: 'Ree-fond Compliance: Unified Identity Standard',
                                 Icon: BadgeIcon
                             },
                             {
                                 p: 'High Audit Difficulty',
-                                s: 'Automated Audit Trails & Profiles',
+                                s: 'Ree-fond Compliance: Automated Audit Trails',
                                 Icon: ShieldIcon
                             }
                         ].map((row, i) => (

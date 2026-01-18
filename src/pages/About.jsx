@@ -51,7 +51,7 @@ const About = () => {
                                 Infrastructure <br /><span className="text-ree-green">Before Innovation.</span>
                             </h1>
                             <p className="text-lg md:text-xl text-slate-400 font-medium leading-tight max-w-3xl mx-auto">
-                                We aren't a tax app. We are the plumbing. Standardizing the data layer that powers Nigerian fiscal operations.
+                                We aren't a fintech application. We are the infrastructure layer. Standardizing the data protocols that power Nigerian fiscal operations.
                             </p>
                         </motion.div>
                     </motion.div>

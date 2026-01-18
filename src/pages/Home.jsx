@@ -126,8 +126,8 @@ const Home = () => {
     const [textIndex, setTextIndex] = useState(0)
     const navigate = useNavigate()
     const heroTexts = [
-        { prefix: "Shadow Tax", suffix: "Infrastructure." },
-        { prefix: "Unified Tax", suffix: "System of Record." },
+        { prefix: "Revenue", suffix: "Infrastructure." },
+        { prefix: "Regulatory", suffix: "Operating System." },
         { prefix: "Automated", suffix: "Compliance Layer." }
     ]
 
@@ -138,9 +138,183 @@ const Home = () => {
         return () => clearInterval(timer)
     }, [])
 
+    const [selectedProduct, setSelectedProduct] = useState(null)
+
+    // Official Product Data
+    const productDetails = {
+        'Ree-fond Revenue': {
+            Icon: ChartIcon,
+            category: 'Revenue & Tax Infrastructure',
+            role: 'Core system of record',
+            definition: 'Ree-fond Revenue is the infrastructure layer that standardizes, tracks, and manages statutory revenue obligations across fragmented tax systems. It provides a structured system of record for taxpayer identities, filings, payments, refunds, and adjustments — independent of how or where submissions occur.',
+            solves: [
+                'Fragmented tax workflows across states and agencies',
+                'Manual, opaque refund and adjustment processes',
+                'Lack of visibility into filing status and obligations',
+                'Inconsistent record-keeping across organizations'
+            ],
+            capabilities: [
+                'Taxpayer identity and jurisdiction mapping',
+                'Filing lifecycle management (manual, portal, API-assisted)',
+                'Refund and adjustment case tracking',
+                'Compliance timelines and SLA monitoring',
+                'Revenue exposure and obligation summaries'
+            ],
+            users: [
+                'Employers managing PAYE',
+                'Accounting and tax firms',
+                'Payroll providers',
+                'Fintechs operating in regulated environments'
+            ],
+            positioning: 'Ree-fond Revenue provides a neutral, auditable system for managing statutory revenue workflows where no unified infrastructure exists.'
+        },
+        'Ree-fond Compliance': {
+            Icon: ShieldIcon,
+            category: 'Risk & Regulatory Infrastructure',
+            role: 'Compliance intelligence and evaluation layer',
+            definition: 'Ree-fond Compliance evaluates statutory behavior, risk exposure, and compliance posture across taxpayers, organizations, and filings. It transforms raw operational data into structured compliance signals — enabling early detection of risk, gaps, and regulatory exposure.',
+            solves: [
+                'Inability to measure compliance health',
+                'Reactive audits instead of proactive risk detection',
+                'Fragmented compliance logic across firms',
+                'Manual compliance checks and guesswork'
+            ],
+            capabilities: [
+                'Rule-based compliance scoring engines',
+                'Risk classification and severity modeling',
+                'Missing obligation and document detection',
+                'Filing timeliness and consistency analysis',
+                'Configurable compliance rules by jurisdiction'
+            ],
+            users: [
+                'Accounting and advisory firms',
+                'Employers and finance teams',
+                'Compliance officers'
+            ],
+            positioning: 'Ree-fond Compliance turns regulatory operations into measurable, actionable compliance intelligence.'
+        },
+        'Ree-fond Evidence': {
+            Icon: FolderIcon,
+            category: 'Institutional Records & Audit Infrastructure',
+            role: 'Verifiable source of truth',
+            definition: 'Ree-fond Evidence is the structured evidence and audit-trail layer that preserves the full history of regulatory actions, documents, and decisions. It creates institutional memory where none exists — ensuring accountability, traceability, and defensibility across time.',
+            solves: [
+                'Lost or fragmented tax documents',
+                'Unverifiable filings and refund claims',
+                'Audit disputes without supporting evidence',
+                'Staff turnover erasing institutional knowledge'
+            ],
+            capabilities: [
+                'Document versioning and metadata tracking',
+                'Immutable activity timelines',
+                'Filing, refund, and compliance audit trails',
+                'Evidence-to-case linkage',
+                'Controlled access and permissioning'
+            ],
+            users: [
+                'Accounting firms',
+                'Employers',
+                'Compliance teams'
+            ],
+            positioning: 'Ree-fond Evidence ensures every regulatory action is traceable, verifiable, and defensible.'
+        }
+    }
+
     return (
         <div className="min-h-screen bg-[#f8fafc] selection:bg-ree-green/20 selection:text-ree-gray overflow-x-hidden" ref={containerRef}>
             <BackgroundDecorations />
+
+            {/* Product Detail Modal */}
+            <AnimatePresence>
+                {selectedProduct && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-8"
+                    >
+                        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" onClick={() => setSelectedProduct(null)} />
+                        <motion.div
+                            layoutId={`product-card-${selectedProduct}`}
+                            className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] shadow-2xl relative z-10 flex flex-col md:flex-row overflow-hidden"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="bg-slate-50 p-8 md:p-12 md:w-1/3 border-r border-slate-100 flex flex-col">
+                                <div className="mb-8">
+                                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-ree-green mb-2">{productDetails[selectedProduct].category}</div>
+                                    <h3 className="text-3xl font-black text-slate-900 leading-none tracking-tight mb-4">{selectedProduct}</h3>
+                                    <div className="inline-block px-3 py-1 rounded-lg bg-slate-200/50 text-slate-600 text-xs font-bold uppercase tracking-wider">
+                                        {productDetails[selectedProduct].role}
+                                    </div>
+                                </div>
+                                <div className="flex-1 flex items-center justify-center opacity-40 mix-blend-multiply pointer-events-none select-none">
+                                    {(() => {
+                                        const Icon = productDetails[selectedProduct].Icon
+                                        return <Icon className="w-48 h-48 text-ree-green" />
+                                    })()}
+                                </div>
+                                <div className="mt-auto">
+                                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-4">Who Use It</div>
+                                    <ul className="space-y-2">
+                                        {productDetails[selectedProduct].users.map((user, i) => (
+                                            <li key={i} className="flex items-center gap-2 text-sm font-medium text-slate-600">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-ree-green" />
+                                                {user}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="p-8 md:p-12 md:w-2/3 bg-white">
+                                <button
+                                    onClick={() => setSelectedProduct(null)}
+                                    className="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>
+
+                                <div className="mb-10">
+                                    <h4 className="text-lg font-black text-slate-900 mb-4 flex items-center gap-2">
+                                        <span className="w-2 h-8 bg-ree-green rounded-full" />
+                                        Official Definition
+                                    </h4>
+                                    <p className="text-slate-600 text-lg leading-relaxed">{productDetails[selectedProduct].definition}</p>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 gap-8 mb-10">
+                                    <div>
+                                        <h4 className="text-sm font-black uppercase tracking-widest text-slate-400 mb-4">What It Solves</h4>
+                                        <ul className="space-y-3">
+                                            {productDetails[selectedProduct].solves.map((item, i) => (
+                                                <li key={i} className="flex items-start gap-3 text-sm font-medium text-slate-600">
+                                                    <span className="text-red-400 mt-0.5">✕</span>
+                                                    {item}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-black uppercase tracking-widest text-slate-400 mb-4">Core Capabilities</h4>
+                                        <ul className="space-y-3">
+                                            {productDetails[selectedProduct].capabilities.map((item, i) => (
+                                                <li key={i} className="flex items-start gap-3 text-sm font-medium text-slate-600">
+                                                    <span className="text-ree-green mt-0.5">✓</span>
+                                                    {item}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div className="bg-ree-green/5 p-6 rounded-2xl border border-ree-green/10">
+                                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-ree-green mb-2">Positioning</div>
+                                    <p className="text-slate-700 font-bold italic">"{productDetails[selectedProduct].positioning}"</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Hero Section */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden bg-slate-950">
@@ -185,8 +359,8 @@ const Home = () => {
                                 </AnimatePresence>
                             </div>
 
-                            <motion.p variants={fadeInUp} className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-16 font-medium leading-relaxed">
-                                Standardizing Nigeria's tax record-keeping through <br className="hidden md:block" /> a resilient, API-first system of record.
+                            <motion.p variants={fadeInUp} className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto mb-16 font-medium leading-relaxed">
+                                Ree-fond builds neutral infrastructure that standardizes regulatory workflows, preserves institutional memory, and enables trust in fragmented systems.
                             </motion.p>
 
                             <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row justify-center gap-6">
@@ -264,16 +438,16 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Core MVP API Modules */}
+            {/* Product Family Section */}
             <section className="relative py-20 lg:py-48 overflow-hidden bg-slate-50">
                 <div className="absolute top-0 left-1/4 w-[50%] h-[50%] bg-ree-green/5 blur-[120px] rounded-full pointer-events-none" />
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
                     <div className="text-center mb-16 lg:mb-32">
                         <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="text-4xl md:text-7xl lg:text-8xl font-black text-ree-gray tracking-tighter mb-10 leading-none">
-                            MVP <span className="text-ree-light">Modules.</span>
+                            The <span className="text-ree-light">Infrastructure.</span>
                         </motion.h2>
                         <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed opacity-80">
-                            Pre-built intelligence for identifying leaks, standardizing payroll, and managing state-level filing history.
+                            Domain-specific operating systems for the entire revenue lifecycle.
                         </p>
                     </div>
 
@@ -282,61 +456,48 @@ const Home = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}
-                        className="grid md:grid-cols-2 lg:grid-cols-3 gap-12"
+                        className="grid md:grid-cols-3 gap-8 lg:gap-12"
                     >
                         {[
                             {
-                                title: 'Taxpayer Profiles',
-                                desc: 'Unified 360° view of individual/corporate tax footprints across all 37 agencies.',
-                                Icon: FolderIcon,
-                                tag: 'Identity'
-                            },
-                            {
-                                title: 'Leakage Detection',
-                                desc: 'Automated identification of unfiled periods and inconsistent data points across states.',
-                                Icon: RefreshIcon,
-                                tag: 'Audit'
-                            },
-                            {
-                                title: 'Refund Tracker',
-                                desc: 'The private status-check layer for identifying and monitoring refund entitlements.',
-                                Icon: BadgeIcon,
-                                tag: 'Settlement'
-                            },
-                            {
-                                title: 'Resilience Audit',
-                                desc: 'Preparing entities for the 2026 regime shift with automated stress-tests.',
-                                Icon: ShieldIcon,
-                                tag: 'Compliance'
-                            },
-                            {
-                                title: 'Payroll Engine',
-                                desc: 'Standardized PAYE data hooks for seamless multi-state reporting.',
+                                title: 'Ree-fond Revenue',
+                                desc: 'The compliance and revenue-operations layer powering structured tax workflows. Covers PAYE, VAT, CIT, WHT, and refunds.',
                                 Icon: ChartIcon,
                                 tag: 'Operations'
                             },
                             {
-                                title: 'Real-time TCC',
-                                desc: 'Predictive clearance scoring based on real-time filing history.',
-                                Icon: LightningIcon,
-                                tag: 'Velocity'
+                                title: 'Ree-fond Compliance',
+                                desc: 'Cross-agency obligations, risk scoring, and audit readiness. The standard for regulatory resilience.',
+                                Icon: ShieldIcon,
+                                tag: 'Resilience'
+                            },
+                            {
+                                title: 'Ree-fond Evidence',
+                                desc: 'Immutable document trails, filings, and institutional memory for bulletproof audit defense.',
+                                Icon: FolderIcon,
+                                tag: 'Memory'
                             }
                         ].map((module, i) => (
                             <motion.div
                                 key={i}
+                                layoutId={`product-card-${module.title}`}
                                 variants={fadeInUp}
                                 whileHover={{ y: -10 }}
-                                className="group flex flex-col p-2"
+                                onClick={() => setSelectedProduct(module.title)}
+                                className="group flex flex-col p-8 bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-ree-green/10 transition-all cursor-pointer"
                             >
-                                <div className="text-ree-green mb-8 w-14 h-14 bg-ree-green/5 rounded-2xl flex items-center justify-center group-hover:bg-ree-green group-hover:text-white transition-all duration-500">
-                                    <module.Icon className="w-7 h-7" />
+                                <div className="text-ree-green mb-8 w-16 h-16 bg-ree-green/5 rounded-2xl flex items-center justify-center group-hover:bg-ree-green group-hover:text-white transition-all duration-500">
+                                    <module.Icon className="w-8 h-8" />
                                 </div>
-                                <div>
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-ree-light mb-3 block">{module.tag}</span>
-                                    <h3 className="text-2xl lg:text-3xl font-black text-ree-gray tracking-tight leading-none mb-4">{module.title}</h3>
+                                <div className="flex-1">
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-ree-light mb-4 block">{module.tag}</span>
+                                    <h3 className="text-2xl font-black text-ree-gray tracking-tight leading-none mb-6">{module.title}</h3>
                                     <p className="text-slate-500 font-medium text-lg leading-relaxed">{module.desc}</p>
                                 </div>
-                                <div className="mt-8 w-full h-px bg-slate-200/50 group-hover:bg-ree-green/30 transition-colors" />
+                                <div className="mt-8 flex items-center gap-2 text-ree-green font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 duration-300">
+                                    <span>Learn More</span>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                </div>
                             </motion.div>
                         ))}
                     </motion.div>

@@ -149,7 +149,7 @@ const Layout = ({ children }) => {
                     <div className="w-full h-px bg-white/5 mb-16" />
 
                     <div className="flex flex-col md:flex-row justify-between w-full items-center gap-12 font-black text-[10px] uppercase tracking-[0.4em]">
-                        <div className="opacity-40 italic">© {new Date().getFullYear()} Ree-fond Tech. Global Infrastructure Layer.</div>
+                        <div className="opacity-40 italic">© {new Date().getFullYear()} Ree-fond Tech. Regulatory & Financial Infrastructure.</div>
                         <div className="flex flex-wrap justify-center gap-12">
                             <a href="#" className="hover:text-ree-green transition-colors">NDPR Compliant</a>
                             <a href="#" className="hover:text-ree-green transition-colors">Privacy</a>
@@ -159,7 +159,7 @@ const Layout = ({ children }) => {
                     </div>
 
                     <p className="mt-20 text-[10px] opacity-20 max-w-3xl font-bold tracking-widest leading-loose">
-                        DISCLAIMER: REE-FOND IS A PRIVATE TAX TECHNOLOGY INFRASTRUCTURE LAYER AND IS NOT CURRENTLY AFFILIATED WITH ANY GOVERNMENT AGENCY OR TAX AUTHORITY IN NIGERIA.
+                        DISCLAIMER: REE-FOND IS A PRIVATE INFRASTRUCTURE LAYER FOR REGULATORY AND FINANCIAL OPERATIONS AND IS NOT CURRENTLY AFFILIATED WITH ANY GOVERNMENT AGENCY.
                     </p>
                 </div>
             </footer>
