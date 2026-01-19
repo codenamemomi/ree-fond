@@ -1,84 +1,102 @@
-# Ree-fond — Nigeria’s Tax Infrastructure Layer
+# Ree-fond — Regulatory & Financial Infrastructure
 
-Ree-fond is an **API‑first tax infrastructure platform** that standardizes tax compliance, filings, and refund workflows in Nigeria — starting with PAYE — long before official government APIs exist.
+**Ree-fond builds neutral infrastructure that standardizes regulatory workflows, preserves institutional memory, and enables trust in fragmented systems.**
 
-> Think **"Plaid for Nigerian Taxes"** or **"Stripe before banks had APIs."**
+We are the infrastructure layer that standardizes, tracks, and manages statutory revenue obligations across Nigeria's fragmented tax ecosystem.
 
----
-
-## 🚀 The One-Line Pitch
-Standardizing Nigeria's tax infrastructure layer through structured systems of record, unified identity, and transparent audit trails.
-
-## ⚖️ The Reality (The Problem)
-Nigeria lacks a unified, automated tax API. The current ecosystem is:
-- **Federated:** Disparate systems across FIRS, 36 States, and the FCT.
-- **Manual:** Most refunds and adjustments are handled offline, with no visibility or tracking.
-- **Opaque:** Costs employers and SMEs weeks to resolve basic discrepancies.
-- **Fragmented:** Tax-to-GDP ratio remains at ~11% (global average ~20%) due to frictional compliance costs.
-
-## 🏗️ The Opportunity
-Instead of waiting for a government mandate, Ree-fond builds the infrastructure layer **around it**. We standardize tax data and workflows so that when governments are ready, integration is inevitable.
+> **"Infrastructure wins by being early and trusted."**
 
 ---
 
-## 🛠️ Infrastructure Modules (MVP)
+## 🚀 The Mission
 
-### 1. Shadow Tax API
-A structured system of record for managing taxpayer profiles, filing history, refunds, and compliance timelines without requiring direct government database access initially.
+To standardize Nigeria's regulatory data layer. Instead of waiting for a government mandate, Ree-fond builds the **structured system of record** that powers compliance, filing, and revenue operations today. When governments are ready for full digitization, integration will be inevitable.
 
-### 2. Taxpayer Identity API
-Unified identity and profile management across states and tax types. 
-- *Lookup:* TIN, Status, Profile consistency.
+## ⚖️ The Problem (The Reality)
 
-### 3. Filing Tracker API
-Visibility into filings even when submissions are manual or semi-digital. 
-- *Features:* Status tracking, document attachments, amendment workflows.
+Nigeria's tax and regulatory ecosystem operates on:
 
-### 4. Refund & Adjustment API
-Real-time visibility into opaque refund processes. 
-- *Metrics:* Status, Claim amounts, assigned Tax Offices, and historical progress.
-
-### 5. Compliance Scoring API
-Calculates compliance health, risk exposure, and missing requirements for individuals and SMEs.
+- **Fragmentation:** Disconnected systems across FIRS, 36 States, and agencies.
+- **Opacity:** Manual refund processes and lack of visibility into obligation status.
+- **Risk:** Inconsistent record-keeping leading to unavoidable audit exposure.
+- **Friction:** Compliance costs that stifle growth and cap the Tax-to-GDP ratio.
 
 ---
 
-## 📈 Phased Scaling Strategy
+## 🏗️ The Product Family
 
-- **Phase 1: Private Infrastructure (MVP):** Manage private databases and human-in-the-loop workflows to prove recurring demand and usage.
-- **Phase 2: State-Level Pilots:** Partner with progressive State IRS agencies to offer digitized intake, workflow dashboards, and compliance analytics.
-- **Phase 3: Official Integrations:** Full read-only APIs, filing status confirmation, and automated refund progress checks.
+Ree-fond eliminates this chaos through three dedicated infrastructure layers:
+
+### 1. Ree-fond Revenue
+
+**Category:** Revenue & Tax Infrastructure
+**Role:** Core system of record
+
+- Standardizes, tracks, and manages statutory revenue obligations (PAYE, VAT, CIT).
+- Independent system of record for taxpayer identities, filings, and refunds.
+- Solves fragmented workflows and manual refund processes.
+
+### 2. Ree-fond Compliance
+
+**Category:** Risk & Regulatory Infrastructure
+**Role:** Compliance intelligence and evaluation layer
+
+- Evaluates statutory behavior, risk exposure, and compliance posture.
+- Transforms raw operational data into structured compliance signals.
+- Enables early detection of risk, gaps, and regulatory exposure.
+
+### 3. Ree-fond Evidence
+
+**Category:** Institutional Records & Audit Infrastructure
+**Role:** Verifiable source of truth
+
+- Preserves the immutable history of regulatory actions, documents, and decisions.
+- Creates institutional memory where none exists to ensure audit defensibility.
+- Solves lost documents and unverifiable filing claims.
+
+---
+
+## 📈 Roadmap
+
+- **Phase 1: Private Infrastructure (Current):** Serving private sector users (accounting firms, employers, fintechs) who need structure today.
+- **Phase 2: Network Effects:** Expanding the "Ree-fond Standard" for filing evidence and compliance scoring.
+- **Phase 3: Institutional Integration:** Verified data pipelines for government agencies and regulators.
 
 ---
 
 ## 💻 Tech Stack
 
 - **Framework:** [React 19](https://react.dev/) + [Vite 7](https://vite.dev/)
-- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
-- **Animations:** [Framer Motion](https://www.framer.com/motion/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Animation:** [Framer Motion](https://www.framer.com/motion/)
 - **Routing:** [React Router v6](https://reactrouter.com/)
-- **Icons/Scents:** [React Scroll](https://www.npmjs.com/package/react-scroll)
 
 ---
 
 ## 🏁 Getting Started
 
 ### Prerequisites
+
 - Node.js (Latest LTS recommended)
-- npm or yarn
+- npm
 
 ### Installation
+
 1. Clone the repository
 2. Install dependencies:
+
    ```bash
    npm install
    ```
+
 3. Start the development server:
+
    ```bash
    npm run dev
    ```
 
 ### Building for Production
+
 ```bash
 npm run build
 ```
@@ -86,9 +104,10 @@ npm run build
 ---
 
 ## 🛡️ Legal & Compliance
-- **NDPR Compliant:** Strict adherence to Nigerian Data Protection Regulations.
-- **Private Entity:** Ree-fond is a private tax technology infrastructure layer and is not currently affiliated with any government agency or tax authority in Nigeria.
+
+- **NDPR Compliant:** Designed for strict adherence to Nigerian Data Protection Regulations.
+- **Disclaimer:** Ree-fond is a private infrastructure layer for regulatory and financial operations and is not currently affiliated with any government agency.
 
 ---
 
-© 2026 Ree-fond. Building Nigeria's Tax Future.
+© 2026 Ree-fond Tech. Regulatory & Financial Infrastructure.
