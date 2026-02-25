@@ -1,11 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
 import logo from '../assets/logo.png'
+import MegaMenu from './MegaMenu'
 
 const Layout = ({ children }) => {
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [activeMegaMenu, setActiveMegaMenu] = useState(null)
+    const timeoutRef = useRef(null)
     const location = useLocation()
 
     useEffect(() => {
@@ -17,6 +21,10 @@ const Layout = ({ children }) => {
     // Close mobile menu on route change
     useEffect(() => {
         window.scrollTo(0, 0)
+        setActiveMegaMenu(null)
+    }, [location.pathname])
+
+    useEffect(() => {
         if (isMobileMenuOpen) {
             setIsMobileMenuOpen(false)
         }
@@ -34,68 +42,113 @@ const Layout = ({ children }) => {
         }
     }, [isMobileMenuOpen])
 
+    const handleMouseEnter = (item) => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        if (item !== 'Pricing') {
+            setActiveMegaMenu(item)
+        } else {
+            setActiveMegaMenu(null)
+        }
+    }
+
+    const handleMouseLeave = () => {
+        timeoutRef.current = setTimeout(() => {
+            setActiveMegaMenu(null)
+        }, 150)
+    }
+
     const links = [
-        { label: 'Infrastructure', path: '/' },
-        { label: 'Tax Reality', path: '/problems' },
-        { label: 'API Docs', path: '/docs' },
-        { label: 'About Us', path: '/about' }
+        { label: 'Products', path: '#', hasDropdown: true },
+        { label: 'Solutions', path: '#', hasDropdown: true },
+        { label: 'Developers', path: '#', hasDropdown: true },
+        { label: 'Resources', path: '#', hasDropdown: true },
+        { label: 'Pricing', path: '/early-access', hasDropdown: false }
     ]
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50 font-sans selection:bg-ree-green selection:text-white">
+        <div className="min-h-screen flex flex-col bg-white font-sans selection:bg-emerald-500 selection:text-white">
             {/* Navbar */}
-            <nav className={`fixed w-full transition-all duration-700 ${isMobileMenuOpen ? 'z-[130] bg-transparent py-8' : isScrolled ? 'z-50 bg-white/70 backdrop-blur-2xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] py-4' : 'z-50 bg-transparent py-8'}`}>
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
+            <nav
+                className={`fixed w-full transition-all duration-500 ${isMobileMenuOpen
+                    ? 'z-[130] bg-white py-6'
+                    : isScrolled
+                        ? 'z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 py-4 shadow-sm'
+                        : 'z-50 bg-white py-6 border-b border-transparent'
+                    }`}
+                onMouseLeave={handleMouseLeave}
+            >
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center relative">
                     <Link to="/" className="flex items-center group z-[120] relative">
-                        <motion.div whileHover={{ scale: 1.1, rotate: 10 }} whileTap={{ scale: 0.9 }}>
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                             <img
                                 src={logo}
                                 alt="Ree-fond"
-                                className="h-12 w-auto"
+                                className="h-10 w-auto"
                             />
                         </motion.div>
-                        <span className={`ml-4 text-2xl font-black tracking-tighter transition-colors ${isMobileMenuOpen ? 'text-white' : 'text-ree-green'}`}>Ree-fond</span>
+                        <span className="ml-3 text-xl font-bold tracking-tight text-slate-900">Ree-fond</span>
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-12">
+                    <div className="hidden md:flex items-center space-x-1">
                         {links.map((link) => (
-                            <Link
-                                key={link.path}
-                                to={link.path}
-                                className="relative group py-2"
+                            <div
+                                key={link.label}
+                                className="relative"
+                                onMouseEnter={() => handleMouseEnter(link.label)}
                             >
-                                <span className={`text-[11px] font-black tracking-[0.3em] uppercase transition-all ${location.pathname === link.path ? 'text-ree-green' : 'text-slate-500 group-hover:text-ree-green'}`}>
+                                <Link
+                                    to={link.path}
+                                    className={`flex items-center gap-1 px-5 py-2 rounded-lg text-sm font-semibold transition-all ${(activeMegaMenu === link.label || location.pathname === link.path)
+                                        ? 'text-emerald-600 bg-emerald-50/50'
+                                        : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
+                                        }`}
+                                >
                                     {link.label}
-                                </span>
-                                {location.pathname === link.path && (
-                                    <motion.div
-                                        layoutId="nav-underline"
-                                        className="absolute -bottom-1 left-0 right-0 h-1 bg-ree-green rounded-full"
-                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                    />
-                                )}
-                            </Link>
+                                    {link.hasDropdown && (
+                                        <ChevronDown className={`h-4 w-4 transition-transform ${activeMegaMenu === link.label ? 'rotate-180' : ''}`} />
+                                    )}
+                                </Link>
+                            </div>
                         ))}
+                    </div>
+
+                    <div className="hidden md:flex items-center gap-6">
                         <Link
                             to="/early-access"
-                            className="group relative overflow-hidden bg-ree-green text-white px-10 py-4 rounded-[1.5rem] font-black text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl shadow-ree-green/20"
+                            className="text-sm font-semibold text-slate-600 hover:text-slate-950 transition-colors"
                         >
-                            <span className="relative z-10">Early Access</span>
-                            <div className="absolute inset-0 bg-ree-light translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                            Log in
+                        </Link>
+                        <Link
+                            to="/early-access"
+                            className="bg-slate-900 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all hover:-translate-y-0.5"
+                        >
+                            Get Started
                         </Link>
                     </div>
 
-                    {/* Mobile Hamburger */}
+                    {/* MegaMenu Dropdown */}
+                    <AnimatePresence>
+                        {activeMegaMenu && (
+                            <MegaMenu
+                                activeItem={activeMegaMenu}
+                                onMouseEnter={() => handleMouseEnter(activeMegaMenu)}
+                                onMouseLeave={handleMouseLeave}
+                            />
+                        )}
+                    </AnimatePresence>
+
+                    {/* Mobile Hamburger icon remains similar but adapted to white theme */}
                     <button
-                        className={`md:hidden z-[120] relative w-14 h-12 flex items-center justify-center rounded-2xl border transition-all ${isMobileMenuOpen ? 'bg-transparent border-white/20' : 'bg-slate-50 border-slate-100 shadow-sm'}`}
+                        className="md:hidden z-[120] relative p-2"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         aria-label="Toggle Menu"
                     >
-                        <div className="w-6 h-4 flex flex-col justify-between pointer-events-none">
-                            <span className={`w-full h-0.5 transform transition-all duration-300 ${isMobileMenuOpen ? 'bg-white rotate-45 translate-y-[7px]' : 'bg-slate-900'}`} />
+                        <div className="w-6 h-5 flex flex-col justify-between pointer-events-none">
+                            <span className={`w-full h-0.5 transform transition-all duration-300 ${isMobileMenuOpen ? 'bg-slate-900 rotate-45 translate-y-[9px]' : 'bg-slate-900'}`} />
                             <span className={`w-full h-0.5 bg-slate-900 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
-                            <span className={`w-full h-0.5 transform transition-all duration-300 ${isMobileMenuOpen ? 'bg-white -rotate-45 -translate-y-[7px]' : 'bg-slate-900'}`} />
+                            <span className={`w-full h-0.5 transform transition-all duration-300 ${isMobileMenuOpen ? 'bg-slate-900 -rotate-45 -translate-y-[9px]' : 'bg-slate-900'}`} />
                         </div>
                     </button>
                 </div>
