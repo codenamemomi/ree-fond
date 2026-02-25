@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import logo from '../assets/logo.png'
 import MegaMenu from './MegaMenu'
+import CookieConsent from './CookieConsent'
 
 const Layout = ({ children }) => {
     const [isScrolled, setIsScrolled] = useState(false)
@@ -11,6 +12,21 @@ const Layout = ({ children }) => {
     const [activeMegaMenu, setActiveMegaMenu] = useState(null)
     const timeoutRef = useRef(null)
     const location = useLocation()
+    const [showCookieConsent, setShowCookieConsent] = useState(false)
+
+    useEffect(() => {
+        const hasAccepted = sessionStorage.getItem('cookie_consent_accepted')
+        if (!hasAccepted) {
+            // Delay showing to make it feel more premium
+            const timer = setTimeout(() => setShowCookieConsent(true), 2000)
+            return () => clearTimeout(timer)
+        }
+    }, [])
+
+    const handleAcceptCookies = () => {
+        sessionStorage.setItem('cookie_consent_accepted', 'true')
+        setShowCookieConsent(false)
+    }
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -216,6 +232,15 @@ const Layout = ({ children }) => {
                     </p>
                 </div>
             </footer>
+
+            <AnimatePresence>
+                {showCookieConsent && (
+                    <CookieConsent
+                        onAccept={handleAcceptCookies}
+                        onDismiss={() => setShowCookieConsent(false)}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     )
 }
