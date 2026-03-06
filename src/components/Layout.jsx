@@ -81,6 +81,14 @@ const Layout = ({ children }) => {
         { label: 'Pricing', path: '/early-access', hasDropdown: false }
     ]
 
+    const mobilePageLinks = [
+        { label: 'Home', path: '/' },
+        { label: 'About', path: '/about' },
+        { label: 'Problems We Solve', path: '/problems' },
+        { label: 'Docs', path: '/docs' },
+        { label: 'Contact', path: '/contact' },
+    ]
+
     return (
         <div className="min-h-screen flex flex-col bg-white font-sans selection:bg-emerald-500 selection:text-white">
             {/* Navbar */}
@@ -170,32 +178,65 @@ const Layout = ({ children }) => {
                 </div>
             </nav>
 
-            {/* Mobile Overlay - Moved outside nav for proper z-index stacking */}
+            {/* Mobile Overlay */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="fixed inset-0 bg-gray-900 z-[100] flex flex-col items-center justify-center space-y-6"
+                        initial={{ opacity: 0, x: '100%' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: '100%' }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="fixed inset-0 bg-slate-950 z-[100] flex flex-col overflow-y-auto"
                     >
+                        {/* Top spacer for navbar height */}
+                        <div className="h-20 shrink-0" />
 
-                        {links.map((link) => (
-                            <Link
-                                key={link.path}
-                                to={link.path}
-                                className={`text-xl font-black tracking-widest uppercase ${location.pathname === link.path ? 'text-ree-green' : 'text-white/60'}`}
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
-                        <Link
-                            to="/early-access"
-                            className="bg-ree-green text-white px-8 py-3 rounded-full font-bold shadow-2xl text-base mt-4"
-                        >
-                            Get Early Access
-                        </Link>
+                        <div className="flex flex-col flex-1 px-8 pb-12">
+                            {/* Pages section */}
+                            <div className="mb-10">
+                                <p className="text-[10px] font-black tracking-[0.35em] uppercase text-white/25 mb-5">
+                                    Pages
+                                </p>
+                                <div className="flex flex-col gap-1">
+                                    {mobilePageLinks.map((link) => (
+                                        <Link
+                                            key={link.path}
+                                            to={link.path}
+                                            className={`text-2xl font-black tracking-tight py-2.5 border-b border-white/5 transition-colors ${location.pathname === link.path
+                                                    ? 'text-ree-green'
+                                                    : 'text-white/80 hover:text-white'
+                                                }`}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="w-full h-px bg-white/10 mb-10" />
+
+                            {/* CTA */}
+                            <div className="flex flex-col gap-4">
+                                <Link
+                                    to="/early-access"
+                                    className="w-full text-center bg-ree-green text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl shadow-ree-green/20 hover:bg-ree-light transition-colors"
+                                >
+                                    Get Early Access
+                                </Link>
+                                <Link
+                                    to="/contact"
+                                    className="w-full text-center border border-white/15 text-white/70 px-8 py-4 rounded-2xl font-semibold text-base hover:border-white/30 hover:text-white transition-colors"
+                                >
+                                    Contact Us
+                                </Link>
+                            </div>
+
+                            {/* Footer note */}
+                            <p className="mt-auto pt-12 text-[10px] text-white/20 font-bold tracking-widest uppercase text-center">
+                                © {new Date().getFullYear()} Ree-fond Tech
+                            </p>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
