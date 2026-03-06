@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, ArrowRight, Home, Info, AlertCircle, BookOpen, Mail, Zap } from 'lucide-react'
 import logo from '../assets/logo.png'
 import MegaMenu from './MegaMenu'
 import CookieConsent from './CookieConsent'
@@ -10,6 +10,7 @@ const Layout = ({ children }) => {
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const [activeMegaMenu, setActiveMegaMenu] = useState(null)
+    const [isMobile, setIsMobile] = useState(false)
     const timeoutRef = useRef(null)
     const location = useLocation()
     const [showCookieConsent, setShowCookieConsent] = useState(false)
@@ -32,6 +33,14 @@ const Layout = ({ children }) => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20)
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    // Track window width for mobile detection
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
     }, [])
 
     // Close mobile menu on route change
@@ -82,15 +91,16 @@ const Layout = ({ children }) => {
     ]
 
     const mobilePageLinks = [
-        { label: 'Home', path: '/' },
-        { label: 'About', path: '/about' },
-        { label: 'Problems We Solve', path: '/problems' },
-        { label: 'Docs', path: '/docs' },
-        { label: 'Contact', path: '/contact' },
+        { label: 'Home', path: '/', icon: Home, desc: 'Start here' },
+        { label: 'About', path: '/about', icon: Info, desc: 'Our mission & story' },
+        { label: 'Problems We Solve', path: '/problems', icon: AlertCircle, desc: 'Tax pain points we fix' },
+        { label: 'Docs', path: '/docs', icon: BookOpen, desc: 'API & integration guides' },
+        { label: 'Early Access', path: '/early-access', icon: Zap, desc: 'Get priority access' },
+        { label: 'Contact', path: '/contact', icon: Mail, desc: 'Reach out to us' },
     ]
 
     return (
-        <div className="min-h-screen flex flex-col bg-white font-sans selection:bg-emerald-500 selection:text-white">
+        <div className="min-h-screen flex flex-col bg-white font-sans selection:bg-emerald-500 selection:text-white overflow-x-hidden">
             {/* Navbar */}
             <nav
                 className={`fixed w-full transition-all duration-500 ${isMobileMenuOpen
@@ -113,44 +123,49 @@ const Layout = ({ children }) => {
                         <span className="ml-3 text-xl font-bold tracking-tight text-slate-900">Ree-fond</span>
                     </Link>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-1">
-                        {links.map((link) => (
-                            <div
-                                key={link.label}
-                                className="relative"
-                                onMouseEnter={() => handleMouseEnter(link.label)}
-                            >
-                                <Link
-                                    to={link.path}
-                                    className={`flex items-center gap-1 px-5 py-2 rounded-lg text-sm font-semibold transition-all ${(activeMegaMenu === link.label || location.pathname === link.path)
-                                        ? 'text-emerald-600 bg-emerald-50/50'
-                                        : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
-                                        }`}
+                    {/* Desktop Menu — hidden on mobile */}
+                    {!isMobile && (
+                        <div className="flex items-center space-x-1">
+                            {links.map((link) => (
+                                <div
+                                    key={link.label}
+                                    className="relative"
+                                    onMouseEnter={() => handleMouseEnter(link.label)}
                                 >
-                                    {link.label}
-                                    {link.hasDropdown && (
-                                        <ChevronDown className={`h-4 w-4 transition-transform ${activeMegaMenu === link.label ? 'rotate-180' : ''}`} />
-                                    )}
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
+                                    <Link
+                                        to={link.path}
+                                        className={`flex items-center gap-1 px-5 py-2 rounded-lg text-sm font-semibold transition-all ${(activeMegaMenu === link.label || location.pathname === link.path)
+                                            ? 'text-emerald-600 bg-emerald-50/50'
+                                            : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
+                                            }`}
+                                    >
+                                        {link.label}
+                                        {link.hasDropdown && (
+                                            <ChevronDown className={`h-4 w-4 transition-transform ${activeMegaMenu === link.label ? 'rotate-180' : ''}`} />
+                                        )}
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
-                    <div className="hidden md:flex items-center gap-6">
-                        <Link
-                            to="/early-access"
-                            className="text-sm font-semibold text-slate-600 hover:text-slate-950 transition-colors"
-                        >
-                            Log in
-                        </Link>
-                        <Link
-                            to="/early-access"
-                            className="bg-slate-900 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all hover:-translate-y-0.5"
-                        >
-                            Get Started
-                        </Link>
-                    </div>
+                    {/* Desktop CTA buttons — hidden on mobile */}
+                    {!isMobile && (
+                        <div className="flex items-center gap-6">
+                            <Link
+                                to="/early-access"
+                                className="text-sm font-semibold text-slate-600 hover:text-slate-950 transition-colors"
+                            >
+                                Log in
+                            </Link>
+                            <Link
+                                to="/early-access"
+                                className="bg-slate-900 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all hover:-translate-y-0.5"
+                            >
+                                Get Started
+                            </Link>
+                        </div>
+                    )}
 
                     {/* MegaMenu Dropdown */}
                     <AnimatePresence>
@@ -164,17 +179,20 @@ const Layout = ({ children }) => {
                     </AnimatePresence>
 
                     {/* Mobile Hamburger icon remains similar but adapted to white theme */}
-                    <button
-                        className="md:hidden z-[120] relative p-2"
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        aria-label="Toggle Menu"
-                    >
-                        <div className="w-6 h-5 flex flex-col justify-between pointer-events-none">
-                            <span className={`w-full h-0.5 transform transition-all duration-300 ${isMobileMenuOpen ? 'bg-slate-900 rotate-45 translate-y-[9px]' : 'bg-slate-900'}`} />
-                            <span className={`w-full h-0.5 bg-slate-900 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
-                            <span className={`w-full h-0.5 transform transition-all duration-300 ${isMobileMenuOpen ? 'bg-slate-900 -rotate-45 -translate-y-[9px]' : 'bg-slate-900'}`} />
-                        </div>
-                    </button>
+                    {/* Mobile Hamburger — shown only on mobile */}
+                    {isMobile && (
+                        <button
+                            className="z-[120] relative p-2 flex flex-col justify-center items-center"
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            aria-label="Toggle Menu"
+                        >
+                            <div className="w-6 h-5 flex flex-col justify-between">
+                                <span className={`w-full h-0.5 transform transition-all duration-300 ${isMobileMenuOpen ? 'bg-slate-900 rotate-45 translate-y-[9px]' : 'bg-slate-900'}`} />
+                                <span className={`w-full h-0.5 bg-slate-900 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
+                                <span className={`w-full h-0.5 transform transition-all duration-300 ${isMobileMenuOpen ? 'bg-slate-900 -rotate-45 -translate-y-[9px]' : 'bg-slate-900'}`} />
+                            </div>
+                        </button>
+                    )}
                 </div>
             </nav>
 
@@ -186,54 +204,67 @@ const Layout = ({ children }) => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: '100%' }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="fixed inset-0 bg-slate-950 z-[100] flex flex-col overflow-y-auto"
+                        className="fixed inset-0 bg-slate-950 z-[100] flex flex-col overflow-y-auto overflow-x-hidden"
                     >
                         {/* Top spacer for navbar height */}
                         <div className="h-20 shrink-0" />
 
-                        <div className="flex flex-col flex-1 px-8 pb-12">
+                        <div className="flex flex-col flex-1 px-6 pb-12">
                             {/* Pages section */}
-                            <div className="mb-10">
+                            <div className="mb-8">
                                 <p className="text-[10px] font-black tracking-[0.35em] uppercase text-white/25 mb-5">
-                                    Pages
+                                    Navigate
                                 </p>
                                 <div className="flex flex-col gap-1">
-                                    {mobilePageLinks.map((link) => (
-                                        <Link
-                                            key={link.path}
-                                            to={link.path}
-                                            className={`text-2xl font-black tracking-tight py-2.5 border-b border-white/5 transition-colors ${location.pathname === link.path
-                                                    ? 'text-ree-green'
-                                                    : 'text-white/80 hover:text-white'
-                                                }`}
-                                        >
-                                            {link.label}
-                                        </Link>
-                                    ))}
+                                    {mobilePageLinks.map((link) => {
+                                        const Icon = link.icon
+                                        const isActive = location.pathname === link.path
+                                        return (
+                                            <Link
+                                                key={link.path}
+                                                to={link.path}
+                                                className={`flex items-center gap-4 py-4 px-4 rounded-2xl transition-all ${isActive
+                                                    ? 'bg-ree-green/15 text-ree-green'
+                                                    : 'text-white/80 hover:text-white hover:bg-white/5'
+                                                    }`}
+                                            >
+                                                <div className={`p-2 rounded-xl ${isActive ? 'bg-ree-green/20' : 'bg-white/8'
+                                                    }`}>
+                                                    <Icon className="h-5 w-5" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-lg font-black tracking-tight leading-tight">{link.label}</div>
+                                                    <div className="text-xs text-white/40 font-medium mt-0.5">{link.desc}</div>
+                                                </div>
+                                                <ArrowRight className={`h-4 w-4 shrink-0 transition-transform ${isActive ? 'text-ree-green' : 'text-white/20'
+                                                    }`} />
+                                            </Link>
+                                        )
+                                    })}
                                 </div>
                             </div>
 
                             {/* Divider */}
-                            <div className="w-full h-px bg-white/10 mb-10" />
+                            <div className="w-full h-px bg-white/10 mb-8" />
 
                             {/* CTA */}
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-3">
                                 <Link
                                     to="/early-access"
-                                    className="w-full text-center bg-ree-green text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl shadow-ree-green/20 hover:bg-ree-light transition-colors"
+                                    className="w-full text-center bg-ree-green text-white px-8 py-4 rounded-2xl font-bold text-base shadow-2xl shadow-ree-green/20 hover:bg-ree-light transition-colors"
                                 >
-                                    Get Early Access
+                                     Get Early Access
                                 </Link>
                                 <Link
                                     to="/contact"
-                                    className="w-full text-center border border-white/15 text-white/70 px-8 py-4 rounded-2xl font-semibold text-base hover:border-white/30 hover:text-white transition-colors"
+                                    className="w-full text-center border border-white/15 text-white/70 px-8 py-3.5 rounded-2xl font-semibold text-sm hover:border-white/30 hover:text-white transition-colors"
                                 >
                                     Contact Us
                                 </Link>
                             </div>
 
                             {/* Footer note */}
-                            <p className="mt-auto pt-12 text-[10px] text-white/20 font-bold tracking-widest uppercase text-center">
+                            <p className="mt-auto pt-10 text-[10px] text-white/20 font-bold tracking-widest uppercase text-center">
                                 © {new Date().getFullYear()} Ree-fond Tech
                             </p>
                         </div>
