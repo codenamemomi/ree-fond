@@ -207,7 +207,8 @@ const Docs = () => {
     })).filter(cat => cat.endpoints.length > 0)
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-slate-50 relative overflow-hidden">
+            <BackgroundDecorations />
             {/* Header */}
             <section className="relative min-h-[40vh] flex items-center pt-20 lg:pt-24 pb-12 lg:pb-16 overflow-hidden bg-slate-950">
                 {/* Background Image with Overlay */}
@@ -267,7 +268,7 @@ const Docs = () => {
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row gap-8 lg:gap-16">
                     {/* Sidebar Tabs */}
                     <aside className="w-full lg:w-72 shrink-0">
-                        <div className="flex flex-col gap-1 lg:gap-1.5 lg:sticky lg:top-32 p-1.5 rounded-[2.5rem] bg-white/10 backdrop-blur-3xl border border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] lg:overflow-visible no-scrollbar">
+                        <div className="flex flex-col gap-1 lg:gap-1.5 sticky top-24 lg:top-32 p-1.5 rounded-[2.5rem] bg-white/10 backdrop-blur-3xl border border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] lg:overflow-visible no-scrollbar z-20 h-fit max-h-[calc(100vh-160px)] overflow-y-auto">
                             {/* Guides Section */}
                             <h3 className="hidden lg:block text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 mb-1 px-6 mt-4 opacity-50 italic">Guides</h3>
                             <button
@@ -320,6 +321,23 @@ const Docs = () => {
                                 )}
                                 <span className="relative z-10">Schematics</span>
                                 <span className={`relative z-10 text-[8px] px-2 py-0.5 rounded-full border transition-colors ${activeTab === 'schematics' ? 'bg-white/20 text-white border-white/20' : 'bg-slate-100 text-slate-400 border-slate-200'}`}>CORE</span>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('pricing')}
+                                className={`relative w-full text-left px-6 py-2.5 rounded-[2rem] font-black transition-all text-xs lg:text-[10px] uppercase tracking-widest flex items-center justify-between group whitespace-nowrap ${activeTab === 'pricing'
+                                    ? 'text-white'
+                                    : 'text-slate-600 hover:text-ree-green'
+                                    }`}
+                            >
+                                {activeTab === 'pricing' && (
+                                    <motion.div
+                                        layoutId="activeTabDoc"
+                                        className="absolute inset-0 bg-gradient-to-r from-ree-green to-emerald-500 rounded-[2rem] shadow-lg shadow-ree-green/30"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                                <span className="relative z-10">Pricing</span>
                             </button>
 
                             <h3 className="hidden lg:block text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 mb-1 px-6 mt-8 opacity-50 italic">References</h3>
