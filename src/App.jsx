@@ -5,6 +5,8 @@ import About from './pages/About'
 import Problems from './pages/Problems'
 import Docs from './pages/Docs'
 import EarlyAccess from './pages/EarlyAccess'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import Pricing from './pages/Pricing'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/problems" element={<Problems />} />
           <Route path="/docs" element={<Docs />} />
           <Route path="/early-access" element={<EarlyAccess />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={
             <div className="py-40 text-center bg-gray-50 h-[80vh] flex flex-col justify-center">
               <h1 className="text-4xl font-black mb-8">Ready to Connect?</h1>

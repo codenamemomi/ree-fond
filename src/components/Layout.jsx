@@ -87,7 +87,7 @@ const Layout = ({ children }) => {
         { label: 'Solutions', path: '#', hasDropdown: true },
         { label: 'Developers', path: '#', hasDropdown: true },
         { label: 'Resources', path: '#', hasDropdown: true },
-        { label: 'Pricing', path: '/early-access', hasDropdown: false }
+        { label: 'Pricing', path: '/pricing', hasDropdown: false }
     ]
 
     const mobilePageLinks = [
@@ -253,7 +253,7 @@ const Layout = ({ children }) => {
                                     to="/early-access"
                                     className="w-full text-center bg-ree-green text-white px-8 py-4 rounded-2xl font-bold text-base shadow-2xl shadow-ree-green/20 hover:bg-ree-light transition-colors"
                                 >
-                                     Get Early Access
+                                    Get Early Access
                                 </Link>
                                 <Link
                                     to="/contact"
@@ -289,11 +289,11 @@ const Layout = ({ children }) => {
 
                     <div className="w-full h-px bg-white/5 mb-16" />
 
-                    <div className="flex flex-col md:flex-row justify-between w-full items-center gap-12 font-black text-[10px] uppercase tracking-[0.4em]">
-                        <div className="opacity-40 italic">© {new Date().getFullYear()} Ree-fond Tech. Regulatory & Financial Infrastructure.</div>
+                    <div className="flex flex-col md:flex-row justify-between w-full items-center gap-12 font-bold text-[10px] uppercase tracking-[0.4em]">
+                        <div className="opacity-60">© {new Date().getFullYear()} Ree-fond Tech. All rights reserved. <span className="opacity-30 ml-4 hidden md:inline">|</span> <span className="opacity-30 ml-4">Regulatory & Financial Infrastructure</span></div>
                         <div className="flex flex-wrap justify-center gap-12">
                             <a href="#" className="hover:text-ree-green transition-colors">NDPR Compliant</a>
-                            <a href="#" className="hover:text-ree-green transition-colors">Privacy</a>
+                            <Link to="/privacy" className="hover:text-ree-green transition-colors">Privacy</Link>
                             <a href="#" className="hover:text-ree-green transition-colors">Terms</a>
                             <a href="#" className="hover:text-ree-green transition-colors">Lagos, NG</a>
                         </div>
